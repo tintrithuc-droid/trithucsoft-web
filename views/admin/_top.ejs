@@ -40,7 +40,7 @@
   <div class="side-foot">
     <a href="/" target="_blank" rel="noopener">Xem website ↗</a>
     <form method="post" action="/quan-tri/dang-xuat"><input type="hidden" name="_csrf" value="<%= csrf %>"><button type="submit">Đăng xuất</button></form>
-    <small><%= me.name || me.email %> · <%= me.role === 'admin' ? 'Quản trị viên' : 'Biên tập viên' %></small>
+    <% const roleLabel = me.role === 'admin' ? 'Quản trị viên' : 'Biên tập viên'; %><small><%= (me.name && me.name !== roleLabel) ? me.name : me.email %> · <%= roleLabel %></small>
   </div>
 </aside>
 <div class="main">

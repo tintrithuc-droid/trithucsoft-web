@@ -1,4 +1,5 @@
 (function () {
+  document.documentElement.classList.add('js');
   // Menu di động
   var t = document.querySelector('.nav-toggle'), w = document.getElementById('main-nav');
   if (t && w) t.addEventListener('click', function () {

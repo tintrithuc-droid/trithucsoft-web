@@ -3,7 +3,7 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const { q, one } = require('../db');
 const { getSettings } = require('../settings');
-const { icon } = require('../icons');
+const { icon, cover } = require('../icons');
 const { csrf, fmtDate } = require('../util');
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.use(async (req, res, next) => {
     const by = loc => menus.filter(m => m.location === loc);
     const base = BASE() || `${req.protocol}://${req.get('host')}`;
     Object.assign(res.locals, {
-      s, icon, fmtDate, base, offices,
+      s, icon, cover, fmtDate, base, offices,
       menu: { header: by('header'), footer1: by('footer_1'), footer2: by('footer_2'), legal: by('footer_legal') },
       path: req.path,
       canonical: base + (req.path === '/' ? '/' : req.path.replace(/\/$/, '')),
