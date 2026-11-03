@@ -1,0 +1,63 @@
+<%
+  const color = v => /^#[0-9a-fA-F]{3,8}$/.test(v || '') ? v : null;
+  const accent = color(s.color_accent) || '#1F5FBF';
+  const navy = color(s.color_navy) || '#0B1B33';
+  const abs = u => !u ? '' : (/^https?:/.test(u) ? u : base + u);
+%><!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= seo.title %></title>
+<meta name="description" content="<%= seo.desc %>">
+<link rel="canonical" href="<%= canonical %>">
+<meta property="og:type" content="<%= seo.type %>">
+<meta property="og:site_name" content="<%= s.site_name %>">
+<meta property="og:title" content="<%= seo.title %>">
+<meta property="og:description" content="<%= seo.desc %>">
+<meta property="og:url" content="<%= canonical %>">
+<meta property="og:locale" content="vi_VN">
+<% if (seo.image) { %><meta property="og:image" content="<%= abs(seo.image) %>"><meta name="twitter:card" content="summary_large_image"><% } %>
+<% if (s.google_verify) { %><meta name="google-site-verification" content="<%= s.google_verify %>"><% } %>
+<meta name="theme-color" content="<%= accent %>">
+<% if (s.favicon) { %><link rel="icon" href="<%= s.favicon %>"><% } else { %><link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml"><% } %>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/site.css">
+<style>:root{--accent:<%= accent %>;--navy:<%= navy %>}</style>
+<script type="application/ld+json"><%- JSON.stringify({
+  '@context': 'https://schema.org', '@type': 'Organization',
+  name: s.company_name, alternateName: s.site_name, url: base + '/',
+  logo: s.logo ? abs(s.logo) : undefined,
+  telephone: s.hotline && !s.hotline.includes('[') ? s.hotline : undefined,
+  email: s.email && !s.email.includes('[') ? s.email : undefined,
+  address: s.address && !s.address.includes('[') ? s.address : undefined,
+  sameAs: [s.social_facebook, s.social_linkedin, s.social_youtube, s.social_zalo].filter(Boolean),
+}).replace(/</g, '\\u003c') %></script>
+<%- s.analytics_code || '' %>
+</head>
+<body>
+<a class="skip" href="#noi-dung">Bỏ qua, đến nội dung chính</a>
+<% if (s.announcement) { %>
+<div class="announce"><div class="wrap"><% if (s.announcement_url) { %><a href="<%= s.announcement_url %>"><%= s.announcement %> →</a><% } else { %><%= s.announcement %><% } %></div></div>
+<% } %>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a href="/" class="brand" aria-label="<%= s.site_name %>, về trang chủ">
+      <% if (s.logo) { %><img src="<%= s.logo %>" alt="<%= s.site_name %>" class="brand-logo"><% } else { %><span class="brand-mark"><%= s.logo_initials %></span><% } %>
+      <span class="brand-text"><span class="brand-name"><%= s.site_name %></span><% if (s.site_tagline) { %><span class="brand-tag"><%= s.site_tagline %></span><% } %></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav"><span class="sr">Mở menu</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="nav-wrap" id="main-nav">
+      <nav class="nav" aria-label="Điều hướng chính">
+        <% menu.header.forEach(m => { %><a href="<%= m.url %>"<%- m.new_tab ? ' target="_blank" rel="noopener"' : '' %><%- isActive(m.url) ? ' aria-current="page"' : '' %>><%= m.label %></a><% }) %>
+      </nav>
+      <div class="header-actions">
+        <% if (s.header_lang_label) { %><a href="<%= s.header_lang_url || '#' %>" class="lang"><%= s.header_lang_label %></a><% } %>
+        <% if (s.header_cta_label) { %><a href="<%= s.header_cta_url %>" class="btn btn-primary btn-sm"><%= s.header_cta_label %></a><% } %>
+      </div>
+    </div>
+  </div>
+</header>
+<main id="noi-dung">

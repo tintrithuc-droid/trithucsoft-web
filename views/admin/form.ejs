@@ -1,0 +1,25 @@
+<%- include('_top', { title: (isNew ? 'Thêm ' : 'Sửa ') + R.singular, needEditor: R.fields.some(f => f.type === 'richtext') }) %>
+<% const groups = []; R.fields.forEach(f => { const g = f.group || 'Thông tin chính'; let x = groups.find(y => y.name === g); if (!x) { x = { name: g, fields: [] }; groups.push(x); } x.fields.push(f); }); %>
+<p><a href="/quan-tri/r/<%= resKey %>">← <%= R.label %></a></p>
+<% if (errors.length) { %><div class="flash err" role="alert"><% errors.forEach(e => { %><div><%= e %></div><% }) %></div><% } %>
+<form method="post" action="/quan-tri/r/<%= resKey %>/luu" enctype="multipart/form-data" class="form" data-form>
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input type="hidden" name="_id" value="<%= item.id || '' %>">
+  <% groups.forEach(g => { %>
+  <fieldset class="panel"><legend><%= g.name %></legend>
+    <% g.fields.forEach(f => { %><%- include('_field', { f, v: f.type === 'password' ? '' : item[f.name], lists }) %><% }) %>
+  </fieldset>
+  <% }) %>
+  <div class="actions sticky">
+    <button type="submit" class="btn primary">Lưu</button>
+    <button type="submit" name="_next" value="list" class="btn">Lưu và quay lại danh sách</button>
+    <% if (!isNew && R.publicPath && item.slug) { %><a href="<%= R.publicPath + item.slug %>" target="_blank" rel="noopener" class="btn">Xem trên website ↗</a><% } %>
+  </div>
+</form>
+<% if (!isNew) { %>
+<div class="danger">
+  <% if (resKey !== 'users') { %><form method="post" action="/quan-tri/r/<%= resKey %>/<%= item.id %>/nhan-ban"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn">Nhân bản</button></form><% } %>
+  <form method="post" action="/quan-tri/r/<%= resKey %>/<%= item.id %>/xoa" onsubmit="return confirm('Xóa vĩnh viễn mục này?')"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger-btn">Xóa</button></form>
+</div>
+<% } %>
+<%- include('_bottom', { needEditor: R.fields.some(f => f.type === 'richtext') }) %>

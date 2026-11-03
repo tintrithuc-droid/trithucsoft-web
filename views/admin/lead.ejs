@@ -1,0 +1,23 @@
+<%- include('_top', { title: 'Yêu cầu ' + lead.code }) %>
+<p><a href="/quan-tri/yeu-cau">← Yêu cầu tư vấn</a></p>
+<div class="two">
+  <section class="panel">
+    <h2><%= lead.name %></h2>
+    <dl class="dl">
+      <dt>Đơn vị</dt><dd><%= lead.org %></dd>
+      <dt>Điện thoại</dt><dd><a href="tel:<%= lead.phone.replace(/[^0-9+]/g, '') %>"><%= lead.phone %></a></dd>
+      <dt>Email</dt><dd><% if (lead.email) { %><a href="mailto:<%= lead.email %>"><%= lead.email %></a><% } %></dd>
+      <dt>Lĩnh vực</dt><dd><%= lead.need %></dd>
+      <dt>Nội dung</dt><dd style="white-space:pre-wrap"><%= lead.message %></dd>
+      <dt>Thời gian</dt><dd><%= new Date(lead.created_at).toLocaleString('vi-VN') %></dd>
+    </dl>
+  </section>
+  <form method="post" class="panel form">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <div class="f"><label for="st">Trạng thái xử lý</label><select id="st" name="status"><% Object.entries(LEAD_STATUS).forEach(([k, l]) => { %><option value="<%= k %>"<%- lead.status === k ? ' selected' : '' %>><%= l %></option><% }) %></select></div>
+    <div class="f"><label for="nt">Ghi chú nội bộ</label><textarea id="nt" name="note" rows="6"><%= lead.note %></textarea></div>
+    <div class="actions"><button class="btn primary">Cập nhật</button></div>
+  </form>
+</div>
+<% if (me.role === 'admin') { %><div class="danger"><form method="post" action="/quan-tri/yeu-cau/<%= lead.id %>/xoa" onsubmit="return confirm('Xóa yêu cầu này?')"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger-btn">Xóa yêu cầu</button></form></div><% } %>
+<%- include('_bottom') %>

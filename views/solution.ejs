@@ -1,0 +1,70 @@
+<%- include('partials/head') %>
+<% const it = item; %>
+<section class="page-hero"><div class="wrap">
+  <%- include('partials/crumbs', { items: [['Giải pháp', '/giai-phap'], [it.title]] }) %>
+  <div class="sol-hero">
+    <div>
+      <span class="kicker"><%= it.kicker || it.tag || 'Giải pháp' %></span>
+      <h1><%= it.hero_title || it.title %></h1>
+      <% if (it.hero_text) { %><p class="lead" style="max-width:580px"><%= it.hero_text %></p><% } %>
+      <div class="btn-row">
+        <a href="<%= it.demo_url || '/lien-he?linh-vuc=' + encodeURIComponent('Giải pháp phần mềm') %>" class="btn btn-primary"<%- it.demo_url ? ' target="_blank" rel="noopener"' : '' %>>Xem Live Demo</a>
+        <a href="/lien-he?linh-vuc=<%= encodeURIComponent('Giải pháp phần mềm') %>" class="btn btn-outline">Đăng ký tư vấn</a>
+        <% if (it.brochure) { %><a href="<%= it.brochure %>" class="btn btn-outline" download><%- icon('doc', 18, 'currentColor', 2) %>Tải tài liệu giới thiệu (PDF)</a><% } %>
+      </div>
+    </div>
+    <div class="sol-visual"><% if (it.image) { %><img src="<%= it.image %>" alt="Giao diện <%= it.title %>" fetchpriority="high"><% } else { %><span class="ico" style="width:96px;height:96px;border-radius:24px"><%- icon(it.icon, 48) %></span><% } %></div>
+  </div>
+</div></section>
+
+<% if (it.pains.length) { %>
+<section class="section"><div class="wrap stack" style="gap:36px">
+  <div class="sec-head"><div><span class="kicker">Bài toán thường gặp</span><h2 class="h2">Bạn có đang gặp những điều này?</h2></div></div>
+  <div class="grid g-320">
+    <% const pi = ['doc', 'clock', 'report']; it.pains.forEach((p, i) => { %><div class="card pain reveal"><%- icon(pi[i % 3], 28) %><h3 style="font-size:19px"><%= p.title %></h3><p><%= p.text %></p></div><% }) %>
+  </div>
+</div></section>
+<% } %>
+
+<% if (it.modules.length) { %>
+<section class="band-white"><div class="wrap section stack" style="gap:36px">
+  <div class="sec-head"><div><span class="kicker">Giải pháp gồm những gì</span><h2 class="h2">Các phân hệ dùng riêng hoặc kết hợp</h2></div></div>
+  <div class="grid g-270">
+    <% it.modules.forEach((m, i) => { %><div class="mod reveal"><span class="num"><%= i + 1 %></span><h3><%= m.title %></h3><p><%= m.text %></p></div><% }) %>
+  </div>
+</div></section>
+<% } %>
+
+<% if (it.results.length || it.compliance.length) { %>
+<section class="section"><div class="wrap results">
+  <% if (it.results.length) { %>
+  <div class="res-box">
+    <h2>Kết quả tại các đơn vị đang sử dụng</h2>
+    <div class="res-grid"><% it.results.forEach(r => { %><div><b><%= r.value %></b><span><%= r.label %></span></div><% }) %></div>
+    <% if (it.results_note) { %><p class="res-note"><%= it.results_note %></p><% } %>
+  </div>
+  <% } %>
+  <% if (it.compliance.length) { %>
+  <div class="comp"><h2>Tuân thủ quy định</h2><ul><% it.compliance.forEach(c => { %><li><%- icon('check', 20, 'currentColor', 2.2) %><%= c.text %></li><% }) %></ul></div>
+  <% } %>
+</div></section>
+<% } %>
+
+<% if (it.content) { %><section class="section" style="padding-top:0"><div class="wrap"><div class="prose"><%- it.content %></div></div></section><% } %>
+
+<% if (it.faqs.length) { %>
+<section class="band-white"><div class="wrap section faq">
+  <h2 class="h2" style="font-size:36px">Câu hỏi thường gặp</h2>
+  <div class="faq-list"><% it.faqs.forEach((f, i) => { %><details<%- i === 0 ? ' open' : '' %>><summary><%= f.q %></summary><p><%= f.a %></p></details><% }) %></div>
+</div></section>
+<script type="application/ld+json"><%- JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: it.faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }).replace(/</g, '\\u003c') %></script>
+<% } %>
+
+<% if (others.length) { %>
+<section class="section"><div class="wrap stack" style="gap:28px">
+  <h2 class="h2" style="font-size:30px">Giải pháp khác</h2>
+  <div class="grid g-320"><% others.forEach(x => { %><a href="/giai-phap/<%= x.slug %>" class="card"><span class="ico"><%- icon(x.icon) %></span><h3><%= x.title %></h3><p><%= x.summary %></p></a><% }) %></div>
+</div></section>
+<% } %>
+<%- include('partials/cta', { ctaTitle: 'Xem Live Demo cùng chuyên gia Tri Thức', ctaText: 'Chuyên gia Tri Thức trình diễn trên dữ liệu mẫu và trả lời câu hỏi của đơn vị bạn.', ctaLabel: 'Đăng ký tư vấn', ctaUrl: '/lien-he?linh-vuc=' + encodeURIComponent('Giải pháp phần mềm') }) %>
+<%- include('partials/foot') %>

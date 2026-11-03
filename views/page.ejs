@@ -1,0 +1,11 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="wrap">
+  <%- include('partials/crumbs', { items: [[item.title]] }) %>
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:860px">
+    <h1><%= item.title %></h1>
+    <% if (item.lead) { %><p class="lead"><%= item.lead %></p><% } %>
+  </div>
+</div></section>
+<section class="section"><div class="wrap"><div class="prose"><%- item.content %></div></div></section>
+<%- include('partials/cta') %>
+<%- include('partials/foot') %>

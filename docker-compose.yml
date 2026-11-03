@@ -1,0 +1,32 @@
+# Chạy toàn bộ website: docker compose up -d
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: trithuc
+      POSTGRES_USER: trithuc
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-doi-mat-khau-nay}
+      TZ: Asia/Ho_Chi_Minh
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trithuc"]
+      interval: 5s
+      retries: 10
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://trithuc:${DB_PASSWORD:-doi-mat-khau-nay}@db:5432/trithuc
+    ports:
+      - "3000:3000"
+    volumes:
+      - uploads:/app/uploads
+volumes:
+  dbdata:
+  uploads:

@@ -1,0 +1,51 @@
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <% if (s.logo_dark || s.logo) { %><img src="<%= s.logo_dark || s.logo %>" alt="<%= s.site_name %>" class="brand-logo"><% } else { %><span class="brand-mark"><%= s.logo_initials %></span><% } %>
+          <span class="brand-name"><%= s.company_name_upper || s.company_name %></span>
+        </div>
+        <% if (s.footer_about) { %><p><%= s.footer_about %></p><% } %>
+        <p>
+          <% if (!offices.length && s.address) { %><%= s.address %><br><% } %>
+          <% if (s.tax_code) { %>Mã số thuế: <%= s.tax_code %><br><% } %>
+          <% if (s.legal_rep) { %>Người đại diện theo pháp luật: <%= s.legal_rep %><br><% } %>
+          <% if (s.hotline) { %>Hotline<%= s.social_zalo ? ', Zalo' : '' %>: <a href="tel:<%= tel(s.hotline) %>"><%= s.hotline %></a><br><% } %>
+          <% if (s.email) { %>Email: <a href="mailto:<%= s.email %>"><%= s.email %></a><% } %>
+        </p>
+      </div>
+      <% if (offices.length) { %>
+      <div class="foot-offices"><span class="foot-title"><%= s.footer_offices_title %></span>
+        <% offices.forEach(o => { %><span><strong><%= o.title %>:</strong> <%= o.body %></span><% }) %></div>
+      <% } %>
+      <% if (menu.footer1.length) { %>
+      <nav aria-label="<%= s.footer_col1_title %>" class="foot-col"><span class="foot-title"><%= s.footer_col1_title %></span>
+        <% menu.footer1.forEach(m => { %><a href="<%= m.url %>"<%- m.new_tab ? ' target="_blank" rel="noopener"' : '' %>><%= m.label %></a><% }) %></nav>
+      <% } %>
+      <% if (menu.footer2.length) { %>
+      <nav aria-label="<%= s.footer_col2_title %>" class="foot-col"><span class="foot-title"><%= s.footer_col2_title %></span>
+        <% menu.footer2.forEach(m => { %><a href="<%= m.url %>"<%- m.new_tab ? ' target="_blank" rel="noopener"' : '' %>><%= m.label %></a><% }) %></nav>
+      <% } %>
+      <% const socials = [['Zalo OA', s.social_zalo], ['Facebook', s.social_facebook], ['LinkedIn', s.social_linkedin], ['YouTube', s.social_youtube]].filter(x => x[1]); %>
+      <% if (socials.length) { %>
+      <div class="foot-col"><span class="foot-title"><%= s.footer_col3_title %></span>
+        <% socials.forEach(([n, u]) => { %><a href="<%= u %>" target="_blank" rel="noopener"><%= n %></a><% }) %></div>
+      <% } %>
+    </div>
+    <div class="foot-bottom">
+      <span><%= (s.footer_copyright || '').replace('{year}', year) %></span>
+      <div class="foot-legal"><% menu.legal.forEach(m => { %><a href="<%= m.url %>"><%= m.label %></a><% }) %></div>
+    </div>
+  </div>
+</footer>
+<% if (s.float_contact === '1' && (s.hotline || s.social_zalo)) { %>
+<div class="float-contact">
+  <% if (s.hotline && !s.hotline.includes('[')) { %><a href="tel:<%= tel(s.hotline) %>" class="fc-call"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Gọi ngay</a><% } %>
+  <% if (s.social_zalo) { %><a href="<%= s.social_zalo %>" class="fc-zalo" target="_blank" rel="noopener">Zalo</a><% } %>
+</div>
+<% } %>
+<script src="/static/js/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<%- include('partials/head') %>
+<%
+  const ph = v => String(v || '').includes('[');
+  const arrow = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+%>
+
+<section class="hero" aria-roledescription="carousel" aria-label="Thông điệp chính">
+  <% banners.forEach((b, i) => { %>
+  <div class="hero-slide<%= i === 0 ? ' on' : '' %>" data-slide="<%= i %>"<%- i ? ' aria-hidden="true"' : '' %>>
+    <div class="wrap hero-row">
+      <div class="hero-copy">
+        <% if (b.badge) { %><span class="pill"><%- icon('spark', 16, 'currentColor', 2) %><%= b.badge %></span><% } %>
+        <%- i === 0 ? '<h1 class="hero-title">' : '<h2 class="hero-title">' %><% lines(b.title).forEach((l, j) => { %><%= l %><% if (j < lines(b.title).length - 1) { %><br><% } %><% }) %><%- i === 0 ? '</h1>' : '</h2>' %>
+        <% if (b.subtitle) { %><p class="lead"><%= b.subtitle %></p><% } %>
+        <div class="btn-row">
+          <% if (b.cta1_label) { %><a href="<%= b.cta1_url %>" class="btn btn-primary"><%= b.cta1_label %><%- arrow %></a><% } %>
+          <% if (b.cta2_label) { %><a href="<%= b.cta2_url %>" class="btn btn-outline"><%= b.cta2_label %></a><% } %>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <% if (b.image) { %><img src="<%= b.image %>" alt="" <%- i ? 'loading="lazy"' : 'fetchpriority="high"' %>><% } else { %>
+        <div class="panel" aria-hidden="true">
+          <div class="panel-top"><b>Bảng điều hành số</b><span class="live">Đang hoạt động</span></div>
+          <div class="kpis">
+            <div class="kpi">Nhiệm vụ giao<i style="width:72%;background:#5B8FE0"></i></div>
+            <div class="kpi">Đã xử lý<i style="width:58%;background:#5ED3BD"></i></div>
+            <div class="kpi">Đúng hạn KPI<i style="width:86%;background:#F2B66D"></i></div>
+          </div>
+          <div class="bars"><i style="height:38%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:64%"></i><i style="height:72%;background:#3F72C2"></i><i style="height:81%;background:#5B8FE0"></i><i style="height:94%;background:#5ED3BD"></i></div>
+          <div class="feed">
+            <div><span>AI</span>Bản đồ số GIS theo từng phường, xã</div>
+            <div><span style="color:#9FE3D6"><%- icon('check', 14, 'currentColor', 2.2) %></span>Kho dữ liệu tích hợp thuế, BHXH, doanh nghiệp</div>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <% }) %>
+  <% if (banners.length > 1) { %>
+  <div class="hero-dots" role="tablist" aria-label="Chọn banner"><% banners.forEach((b, i) => { %><button type="button" data-go="<%= i %>" aria-label="Banner <%= i + 1 %>" aria-current="<%= i === 0 %>"></button><% }) %></div>
+  <% } %>
+</section>
+
+<% if (stats.length) { %>
+<section class="band-white" aria-label="Số liệu nổi bật">
+  <div class="wrap stats">
+    <% stats.forEach(x => { %><div class="stat"><b><%= x.value %></b><span><%= x.body || x.title %></span></div><% }) %>
+  </div>
+</section>
+<% } %>
+
+<% if (clients.length) { %>
+<section aria-label="<%= s.home_clients_title %>">
+  <div class="wrap clients">
+    <p class="clients-title"><%= s.home_clients_title %></p>
+    <div class="logo-grid">
+      <% clients.forEach(c => { %>
+      <% const inner = c.logo ? `<img src="${c.logo}" alt="${c.name.replace(/"/g, '&quot;')}" loading="lazy">` : null; %>
+      <% if (c.url) { %><a class="logo-cell" href="<%= c.url %>" target="_blank" rel="noopener"><% if (inner) { %><%- inner %><% } else { %><%= c.name %><% } %></a>
+      <% } else { %><div class="logo-cell"><% if (inner) { %><%- inner %><% } else { %><%= c.name %><% } %></div><% } %>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (areas.length || solutions.length) { %>
+<section id="giai-phap" class="section">
+  <div class="wrap stack">
+    <% if (areas.length) { %>
+    <div class="sec-head"><div><span class="kicker"><%= s.home_areas_kicker %></span><h2 class="h2"><%= s.home_areas_title %></h2></div></div>
+    <div class="grid g-340">
+      <% areas.forEach(x => { %>
+      <a href="<%= x.url || '#' %>" class="card reveal">
+        <span class="ico"><%- icon(x.icon || 'code') %></span>
+        <h3 style="font-size:22px"><%= x.title %></h3>
+        <ul class="ticks"><% lines(x.body).filter(Boolean).forEach(l => { %><li><%= l %></li><% }) %></ul>
+        <% if (x.value) { %><span class="go"><%= x.value %> →</span><% } %>
+      </a>
+      <% }) %>
+    </div>
+    <% } %>
+    <% if (solutions.length) { %>
+    <div class="sec-head" style="margin-top:24px">
+      <div><span class="kicker"><%= s.home_solutions_kicker %></span><h2 class="h2" style="font-size:30px"><%= s.home_solutions_title %></h2></div>
+      <a href="/lien-he" class="more">Đăng ký xem demo →</a>
+    </div>
+    <div class="grid g-340" style="gap:16px">
+      <% solutions.forEach((x, i) => { %>
+      <a href="/giai-phap/<%= x.slug %>" class="card sol-card reveal">
+        <span class="sol-no"><%= String(i + 1).padStart(2, '0') %><%= x.tag ? ' · ' + x.tag : '' %></span>
+        <h3><%= x.title %></h3>
+        <p><%= x.summary %></p>
+      </a>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+<% } %>
+
+<% if (consulting.length) { %>
+<section id="tu-van" class="band-white">
+  <div class="wrap section split" style="gap:48px">
+    <div style="flex:1 1 360px">
+      <span class="kicker"><%= s.home_consult_kicker %></span>
+      <h2 class="h2" style="font-size:36px"><%= s.home_consult_title %></h2>
+      <p class="lead" style="font-size:17px"><%= s.home_consult_text %></p>
+      <% if (s.home_consult_cta) { %><a href="/lien-he?linh-vuc=<%= encodeURIComponent('Tư vấn dự án CNTT') %>" class="btn btn-outline btn-sm" style="align-self:flex-start"><%= s.home_consult_cta %></a><% } %>
+    </div>
+    <ol class="consult" style="flex:2 1 560px">
+      <% consulting.forEach((x, i) => { %><li class="reveal"><span class="num" style="width:32px;height:32px;font-size:14px;border-radius:8px"><%= i + 1 %></span><span><%= x.title %><% if (x.body) { %><small class="muted"><%= x.body %></small><% } %></span></li><% }) %>
+    </ol>
+  </div>
+</section>
+<% } %>
+
+<% if (process.length) { %>
+<section>
+  <div class="wrap section stack">
+    <div class="sec-head"><div><span class="kicker"><%= s.home_process_kicker %></span><h2 class="h2"><%= s.home_process_title %></h2></div></div>
+    <ol class="steps grid g-200">
+      <% process.forEach(x => { %><li class="reveal"><span><%= x.value %></span><h3><%= x.title %></h3><p><%= x.body %></p></li><% }) %>
+    </ol>
+  </div>
+</section>
+<% } %>
+
+<% if (licenses.length) { %>
+<section id="ban-quyen" class="band-white">
+  <div class="wrap section stack" style="gap:32px">
+    <div class="sec-head">
+      <div><span class="kicker"><%= s.home_license_kicker %></span><h2 class="h2" style="font-size:36px"><%= s.home_license_title %></h2></div>
+      <% if (s.home_license_link_label) { %><a href="<%= s.home_license_link_url %>" class="more"><%= s.home_license_link_label %> →</a><% } %>
+    </div>
+    <div class="grid g-270">
+      <% licenses.forEach(x => { %><div class="mod reveal"><h3><%= x.title %></h3><p><%= x.body %></p><% if (x.value) { %><span class="muted" style="font-size:13px"><%= x.value %></span><% } %></div><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (projects.length) { %>
+<section id="du-an" class="section">
+  <div class="wrap stack">
+    <div class="sec-head">
+      <div><span class="kicker"><%= s.home_projects_kicker %></span><h2 class="h2"><%= s.home_projects_title %></h2></div>
+      <% if (categories.length > 1) { %>
+      <div class="filters" role="group" aria-label="Lọc dự án theo lĩnh vực" data-filter>
+        <button type="button" class="chip" data-cat="" aria-pressed="true">Tất cả</button>
+        <% categories.forEach(c => { %><button type="button" class="chip" data-cat="<%= c %>" aria-pressed="false"><%= c %></button><% }) %>
+      </div>
+      <% } %>
+    </div>
+    <div class="grid g-340" data-filter-target>
+      <% projects.forEach(p => { %><%- include('partials/project-card', { p }) %><% }) %>
+    </div>
+    <a href="/du-an" class="more">Xem tất cả dự án →</a>
+  </div>
+</section>
+<% } %>
+
+<% if (innovation.length) { %>
+<section id="doi-moi" class="band-navy">
+  <div class="wrap section split">
+    <div>
+      <span class="kicker"><%= s.home_innov_kicker %></span>
+      <h2 class="h2"><%= s.home_innov_title %></h2>
+      <p class="lead"><%= s.home_innov_text %></p>
+    </div>
+    <div class="grid g-240" style="gap:16px">
+      <% innovation.forEach(x => { %><div class="dcard reveal"><%- icon(x.icon || 'spark', 28) %><h3><%= x.title %></h3><p><%= x.body %></p></div><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section id="ve-tri-thuc" class="section">
+  <div class="wrap about">
+    <div>
+      <span class="kicker"><%= s.home_about_kicker %></span>
+      <h2 class="h2"><%= s.home_about_title %></h2>
+      <p class="lead" style="font-size:17px"><%= s.home_about_text %></p>
+      <% if (aboutPoints.length) { %><ul class="checks"><% aboutPoints.forEach(x => { %><li><%- icon('check', 20, 'currentColor', 2.2) %><%= x.title %></li><% }) %></ul><% } %>
+      <% if (badges.length) { %><div class="badges"><% badges.forEach(x => { %><span class="badge"><% if (x.icon) { %><%- icon(x.icon, 18) %><% } %><%= x.title || x.value %></span><% }) %></div><% } %>
+      <% if (s.home_about_link_label) { %><a href="<%= s.home_about_link_url %>" class="more" style="font-size:16px"><%= s.home_about_link_label %> →</a><% } %>
+    </div>
+    <% if (testimonials.length) { %>
+    <figure class="quote" data-quotes>
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="var(--accent)" aria-hidden="true"><path d="M7 7h4v4c0 3-1.5 5-4 6l-.8-1.4C7.6 14.8 8.3 13.6 8.4 12H7zM14 7h4v4c0 3-1.5 5-4 6l-.8-1.4c1.4-.8 2.1-2 2.2-3.6H14z"/></svg>
+      <% testimonials.forEach((t, i) => { %>
+      <div data-quote<%- i ? ' hidden' : '' %> style="display:flex;flex-direction:column;gap:24px">
+        <blockquote>“<%= t.quote %>”</blockquote>
+        <figcaption>
+          <% if (t.avatar) { %><img class="avatar" src="<%= t.avatar %>" alt="" loading="lazy"><% } else { %><span class="avatar"></span><% } %>
+          <span style="display:flex;flex-direction:column;gap:2px"><b><%= t.name %></b><span class="muted" style="font-size:14px"><%= [t.role, t.org].filter(Boolean).join(', ') %></span></span>
+        </figcaption>
+      </div>
+      <% }) %>
+      <% if (testimonials.length > 1) { %><div class="quote-nav"><button type="button" data-q="-1" aria-label="Cảm nhận trước">‹</button><button type="button" data-q="1" aria-label="Cảm nhận tiếp theo">›</button></div><% } %>
+    </figure>
+    <% } %>
+  </div>
+</section>
+
+<% if (posts.length) { %>
+<section id="tin-tuc" class="band-white">
+  <div class="wrap section stack" style="gap:36px">
+    <div class="sec-head">
+      <div><span class="kicker"><%= s.home_news_kicker %></span><h2 class="h2" style="font-size:36px"><%= s.home_news_title %></h2></div>
+      <a href="/tin-tuc" class="more">Xem tất cả bài viết →</a>
+    </div>
+    <div class="grid g-320" style="gap:24px">
+      <% posts.forEach(p => { %><%- include('partials/post-card', { p }) %><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/cta') %>
+<%- include('partials/foot') %>

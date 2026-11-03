@@ -1,0 +1,6 @@
+<nav aria-label="Đường dẫn" class="crumbs">
+  <a href="/">Trang chủ</a>
+  <% items.forEach((c, i) => { %><span aria-hidden="true">/</span><% if (c[1]) { %><a href="<%= c[1] %>"><%= c[0] %></a><% } else { %><span aria-current="page"><%= c[0] %></span><% } %><% }) %>
+</nav>
+<script type="application/ld+json"><%- JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [['Trang chủ', '/'], ...items].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c[0], item: c[1] ? base + c[1] : canonical })) }).replace(/</g, '\\u003c') %></script>

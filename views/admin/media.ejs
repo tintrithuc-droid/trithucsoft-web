@@ -1,0 +1,18 @@
+<%- include('_top', { title: 'Thư viện ảnh, tệp' }) %>
+<form method="post" enctype="multipart/form-data" class="panel" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input type="file" name="files" multiple accept="image/*,application/pdf">
+  <button class="btn primary">Tải lên</button>
+  <span class="muted">PNG, JPG, WebP, GIF, SVG, ICO, PDF, tối đa 15 MB mỗi tệp. Bấm "Chép đường dẫn" rồi dán vào ô ảnh bất kỳ.</span>
+</form>
+<div class="media-grid">
+  <% rows.forEach(m => { %>
+  <div class="media">
+    <% if (m.mime.startsWith('image/')) { %><img src="<%= m.path %>" alt="" loading="lazy"><% } else { %><div class="file">PDF</div><% } %>
+    <small title="<%= m.original_name %>"><%= m.original_name %></small>
+    <div class="row-actions"><button type="button" class="btn sm" data-copy="<%= m.path %>">Chép đường dẫn</button>
+    <form method="post" action="/quan-tri/thu-vien/<%= m.id %>/xoa" onsubmit="return confirm('Xóa tệp? Nơi đang dùng tệp này sẽ mất ảnh.')"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn sm danger-btn">Xóa</button></form></div>
+  </div>
+  <% }) %>
+</div>
+<%- include('_bottom') %>

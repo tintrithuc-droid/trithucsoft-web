@@ -1,0 +1,6 @@
+<article class="post-card reveal">
+  <a href="/tin-tuc/<%= p.slug %>" class="thumb" tabindex="-1" aria-hidden="true"><% if (p.cover) { %><img src="<%= p.cover %>" alt="" loading="lazy"><% } else { %><span class="muted">Ảnh bài viết</span><% } %></a>
+  <span class="post-meta"><%= p.category %> · <time datetime="<%= new Date(p.published_at).toISOString() %>"><%= fmtDate(p.published_at) %></time></span>
+  <h3><a href="/tin-tuc/<%= p.slug %>"><%= p.title %></a></h3>
+  <% if (p.excerpt) { %><p><%= p.excerpt %></p><% } %>
+</article>

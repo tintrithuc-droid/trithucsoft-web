@@ -1,0 +1,38 @@
+<%- include('_top', { title: 'Tổng quan' }) %>
+<div class="cards4">
+  <a href="/quan-tri/yeu-cau?trang_thai=new" class="kpi <%= leadsNew ? 'hot' : '' %>"><b><%= leadsNew %></b><span>Yêu cầu tư vấn mới</span></a>
+  <a href="/quan-tri/r/solutions" class="kpi"><b><%= counts.solutions %></b><span>Giải pháp</span></a>
+  <a href="/quan-tri/r/projects" class="kpi"><b><%= counts.projects %></b><span>Dự án</span></a>
+  <a href="/quan-tri/r/posts" class="kpi"><b><%= counts.posts %></b><span>Bài viết</span></a>
+</div>
+<div class="two">
+  <section class="panel">
+    <div class="panel-h"><h2>Yêu cầu tư vấn gần đây</h2><a href="/quan-tri/yeu-cau">Xem tất cả</a></div>
+    <% if (!leads.length) { %><p class="muted">Chưa có yêu cầu nào. Khi khách gửi form Liên hệ, yêu cầu sẽ hiện ở đây.</p><% } %>
+    <table class="tbl"><tbody>
+      <% leads.forEach(l => { %><tr><td><a href="/quan-tri/yeu-cau/<%= l.id %>"><b><%= l.name %></b></a><br><small class="muted"><%= l.org %> · <%= l.phone %></small></td><td><span class="st st-<%= l.status %>"><%= ({new:'Mới',contacted:'Đã liên hệ',done:'Hoàn tất',spam:'Rác'})[l.status] %></span></td><td class="muted"><%= fmtDate(l.created_at) %></td></tr><% }) %>
+    </tbody></table>
+  </section>
+  <section class="panel">
+    <div class="panel-h"><h2>Nội dung cần cập nhật (<%= todo.length %>)</h2></div>
+    <p class="muted" style="margin-top:0">Các mục còn chỗ giữ chỗ trong ngoặc vuông, ví dụ [Số], cần thay bằng thông tin thật.</p>
+    <% if (!todo.length) { %><p>Tất cả nội dung đã đầy đủ.</p><% } %>
+    <ul class="todo"><% todo.slice(0, 40).forEach(t => { %><li><a href="<%= t.url %>"><%= t.label %></a></li><% }) %></ul>
+  </section>
+</div>
+<section class="panel">
+  <h2>Thay đổi nhanh</h2>
+  <div class="quick">
+    <% if (me.role === 'admin') { %>
+    <a href="/quan-tri/cau-hinh?tab=brand">Logo, màu sắc</a>
+    <a href="/quan-tri/cau-hinh?tab=header">Nút đầu trang, thông báo</a>
+    <a href="/quan-tri/cau-hinh?tab=contact">Hotline, địa chỉ, email</a>
+    <a href="/quan-tri/cau-hinh?tab=footer">Chân trang</a>
+    <a href="/quan-tri/cau-hinh?tab=seo">SEO, đo lường</a>
+    <% } %>
+    <a href="/quan-tri/r/banners">Banner, thông điệp chính</a>
+    <a href="/quan-tri/r/menu?location=header">Menu đầu trang</a>
+    <a href="/quan-tri/r/posts/moi">Viết bài mới</a>
+  </div>
+</section>
+<%- include('_bottom') %>

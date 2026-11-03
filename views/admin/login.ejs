@@ -1,0 +1,14 @@
+<%- include('_top', { title: 'Đăng nhập' }) %>
+<div class="login">
+  <form method="post" action="/quan-tri/dang-nhap" class="login-card">
+    <div class="side-brand" style="color:var(--ink)"><span class="mk">TT</span><span>Quản trị website Tri Thức</span></div>
+    <h1>Đăng nhập</h1>
+    <% if (error) { %><div class="flash err" role="alert"><%= error %></div><% } %>
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label class="f"><span>Email</span><input type="email" name="email" value="<%= email %>" autocomplete="username" required autofocus></label>
+    <label class="f"><span>Mật khẩu</span><input type="password" name="password" autocomplete="current-password" required></label>
+    <button type="submit" class="btn primary" style="width:100%">Đăng nhập</button>
+    <a href="/" class="muted" style="text-align:center">← Về website</a>
+  </form>
+</div>
+<%- include('_bottom') %>

@@ -1,0 +1,37 @@
+{
+  "name": "trithuc-web",
+  "version": "1.0.0",
+  "description": "Website Tri Thức có trang quản trị nội dung động (Node.js, PostgreSQL)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "migrate": "node src/migrate.js",
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.8.2",
+    "connect-pg-simple": "^10.0.0",
+    "dotenv": "^18.0.9",
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.3",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "morgan": "^1.12.1",
+    "multer": "^2.5.0",
+    "nodemailer": "^10.3.1",
+    "pg": "^8.23.1",
+    "quill": "^2.0.3",
+    "sanitize-html": "^2.18.1",
+    "slugify": "^1.6.9"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  }
+}

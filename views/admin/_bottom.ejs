@@ -1,0 +1,6 @@
+<% if (me) { %></div></div></div><% } %>
+<script>window.CSRF = <%- JSON.stringify(typeof csrf !== 'undefined' ? csrf : '') %>;</script>
+<% if (typeof needEditor !== 'undefined' && needEditor) { %><script src="/vendor/quill/quill.js"></script><% } %>
+<script src="/static/js/admin.js"></script>
+</body>
+</html>
