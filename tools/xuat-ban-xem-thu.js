@@ -19,6 +19,10 @@ function rewrite(html) {
   return html;
 }
 (async () => {
+  fs.rmSync(OUT, { recursive: true, force: true }); fs.mkdirSync(OUT, { recursive: true });
+  fs.cpSync(path.join(__dirname, '..', 'public'), path.join(OUT, 'static'), { recursive: true });
+  fs.writeFileSync(path.join(OUT, 'static/css/preview.css'), '.pv-bar{background:var(--navy);color:var(--on-navy);font-size:13px}.pv-bar .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;padding-block:8px}.pv-bar b{color:#fff}.pv-bar a{color:var(--sky);font-weight:600}');
+  fs.writeFileSync(path.join(OUT, 'static/js/preview.js'), "document.addEventListener('submit',function(e){e.preventDefault();});");
   const sm = await (await fetch(H + '/sitemap.xml')).text();
   const paths = [...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].replace(H, '') || '/');
   if (!paths.includes('/lien-he')) paths.push('/lien-he');
@@ -32,5 +36,5 @@ function rewrite(html) {
     }
     fs.writeFileSync(path.join(OUT, f), html); files.push(f);
   }
-  console.log(files.length, 'pages'); fs.writeFileSync('pages.json', JSON.stringify(files));
+  console.log(files.length, 'pages'); 
 })();
