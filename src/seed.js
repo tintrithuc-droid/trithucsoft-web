@@ -29,8 +29,8 @@ module.exports = async function seed(q) {
 
   await ins('banners', [{
     badge: '',
-    title: 'Công nghệ và Tri thức\ncho quản lý hiện đại.',
-    subtitle: 'Tri Thức đồng hành cùng cơ quan nhà nước và doanh nghiệp trong hiện đại hóa quản lý, điều hành và khai thác dữ liệu. Từ tư vấn, xây dựng phần mềm đến vận hành, chúng tôi giúp tổ chức làm việc hiệu quả, minh bạch và bền vững.',
+    title: 'Nền tảng vững chắc\nphía sau những hệ thống lớn.',
+    subtitle: 'Tri Thức xây dựng và vận hành phần mềm lõi cho cơ quan nhà nước và doanh nghiệp: kiến trúc ổn định, dữ liệu an toàn, chạy bền nhiều năm. Chúng tôi làm phần việc nền tảng để khách hàng yên tâm phục vụ người dùng của họ.',
     cta1_label: 'Đặt lịch tư vấn miễn phí', cta1_url: '/lien-he',
     cta2_label: 'Xem các giải pháp', cta2_url: '/giai-phap', sort: 1,
   }]);
@@ -69,7 +69,7 @@ module.exports = async function seed(q) {
     b('innovation', 3, { icon: 'database', title: 'Big Data và kho dữ liệu', body: 'Tích hợp dữ liệu doanh nghiệp, thuế, BHXH phục vụ lãnh đạo điều hành.' }),
     b('innovation', 4, { icon: 'rfid', title: 'RFID và số hóa lưu trữ', body: 'Định vị, kiểm kê, truy vết hồ sơ giấy và chuyển đổi sang kho lưu trữ số.' }),
 
-    ...['Giải pháp phù hợp thực tiễn', 'Kinh nghiệm triển khai nhiều lĩnh vực', 'Đồng hành từ tư vấn đến vận hành', 'Hỗ trợ nhanh chóng, lâu dài']
+    ...['Kiến trúc hệ thống ổn định, chịu tải lớn', 'Dữ liệu an toàn, tuân thủ quy định', 'Vận hành, bảo trì liên tục nhiều năm', 'Phối hợp kín đáo cùng đối tác triển khai']
       .map((t, i) => b('about_points', i + 1, { title: t })),
 
     b('offices', 1, { title: 'Trụ sở', body: 'Tầng 3, Tòa nhà An Phú Plaza, 117-119 Lý Chính Thắng, phường Xuân Hòa, TP. Hồ Chí Minh' }),
@@ -157,7 +157,7 @@ module.exports = async function seed(q) {
   const page = (slug, title, lead, content) => ({ slug, title, lead, content });
   await ins('pages', [
     page('gioi-thieu', 'Về Tri Thức', 'Làm thật, làm kỹ, đồng hành lâu dài cùng khách hàng.',
-      '<p>Thành lập năm 2006, Công ty Cổ phần Tin học Tri Thức hướng tới trở thành đơn vị công nghệ đồng hành hiệu quả trong hiện đại hóa quản lý, điều hành và khai thác dữ liệu.</p><h2>Phương châm</h2><p><strong>Uy tín, Chuyên nghiệp, Đồng hành phát triển.</strong></p><h2>Vì sao chọn Tri Thức</h2><ul><li>Giải pháp phù hợp thực tiễn</li><li>Kinh nghiệm triển khai nhiều lĩnh vực</li><li>Đồng hành từ tư vấn đến vận hành</li><li>Hỗ trợ nhanh chóng, lâu dài</li></ul>'),
+      '<p>Thành lập năm 2006, Công ty Cổ phần Tin học Tri Thức hướng tới trở thành đơn vị công nghệ đồng hành hiệu quả trong hiện đại hóa quản lý, điều hành và khai thác dữ liệu.</p><h2>Phương châm</h2><p><strong>Uy tín, Chuyên nghiệp, Đồng hành phát triển.</strong></p><h2>Vai trò của chúng tôi</h2><p>Phần lớn công việc của Tri Thức nằm ở tầng nền: kiến trúc, phần mềm lõi, tích hợp dữ liệu và vận hành. Chúng tôi thường làm việc phía sau, cùng các đơn vị triển khai và hạ tầng lớn, để hệ thống của khách hàng chạy ổn định và an toàn.</p><ul><li>Kiến trúc hệ thống ổn định, chịu tải lớn</li><li>Dữ liệu an toàn, tuân thủ quy định</li><li>Vận hành, bảo trì liên tục nhiều năm</li><li>Phối hợp kín đáo cùng đối tác triển khai</li></ul>'),
     page('tu-van-cntt', 'Tư vấn CNTT', 'Tư vấn dự án ứng dụng CNTT từ lúc lập đến lúc nghiệm thu, đúng quy định đầu tư công và đấu thầu.',
       '<h2>7 dịch vụ tư vấn</h2><ol><li>Quản lý dự án đầu tư ứng dụng CNTT</li><li>Lập báo cáo kinh tế kỹ thuật, nghiên cứu khả thi và thiết kế dự án</li><li>Thẩm tra hồ sơ thiết kế</li><li>Lập hồ sơ mời thầu và đánh giá hồ sơ dự thầu</li><li>Thẩm định hồ sơ mời thầu và kết quả lựa chọn nhà thầu</li><li>Giám sát dự án CNTT</li><li>Kiểm thử và vận hành thử hệ thống CNTT</li></ol><p>Ngoài ra, Tri Thức tư vấn chuyển đổi số cho tổ chức, số hóa và quản trị dữ liệu, đào tạo và chuyển giao công nghệ.</p>'),
     page('phan-mem-ban-quyen', 'Phần mềm bản quyền', 'Phần mềm chính hãng, xuất hóa đơn đầy đủ cho đơn vị.',

@@ -31,7 +31,7 @@ test('website và trang quản trị', async t => {
   }
   assert.equal((await fetch(base + '/khong-ton-tai')).status, 404);
   const home = await (await fetch(base + '/')).text();
-  assert.ok(home.includes('Công nghệ và Tri thức'));
+  assert.ok(home.includes('Nền tảng vững chắc'));
   assert.ok(home.includes('088 679 2809'));
 
   // Đăng nhập và đổi khẩu hiệu dưới logo

@@ -6,7 +6,7 @@ const GROUPS = [
   {
     id: 'brand', label: 'Nhận diện thương hiệu', fields: [
       { key: 'site_name', label: 'Tên hiển thị trên logo', type: 'text', def: 'Tri Thức' },
-      { key: 'site_tagline', label: 'Dòng mô tả dưới logo', type: 'text', def: 'Đồng hành chuyển đổi số từ 2006' },
+      { key: 'site_tagline', label: 'Dòng mô tả dưới logo', type: 'text', def: 'Nền tảng phần mềm vững chắc' },
       { key: 'logo', label: 'Logo (PNG, SVG, WebP; để trống sẽ dùng chữ viết tắt)', type: 'image', def: '' },
       { key: 'logo_dark', label: 'Logo trên nền tối (chân trang)', type: 'image', def: '' },
       { key: 'logo_initials', label: 'Chữ viết tắt khi chưa có logo', type: 'text', def: 'TT' },
@@ -48,8 +48,8 @@ const GROUPS = [
       { key: 'home_innov_title', label: 'Tiêu đề mục Đổi mới', type: 'text', def: 'Công nghệ mới, dùng đúng chỗ' },
       { key: 'home_innov_text', label: 'Đoạn mô tả mục Đổi mới', type: 'textarea', def: 'Tri Thức ứng dụng công nghệ và tư duy đổi mới để giúp tổ chức vận hành hiệu quả, minh bạch và bền vững. Mỗi công nghệ được chọn vì nó giải quyết một bài toán cụ thể của khách hàng.' },
       { key: 'home_about_kicker', label: 'Nhãn mục Về chúng tôi', type: 'text', def: 'Về Tri Thức' },
-      { key: 'home_about_title', label: 'Tiêu đề mục Về chúng tôi', type: 'text', def: 'Làm thật, làm kỹ, đồng hành lâu dài' },
-      { key: 'home_about_text', label: 'Đoạn giới thiệu ngắn', type: 'textarea', def: 'Tri Thức làm phần mềm và tư vấn công nghệ thông tin từ năm 2006. Chúng tôi lắng nghe kỹ, làm đúng việc khách hàng cần và ở lại hỗ trợ sau khi bàn giao.' },
+      { key: 'home_about_title', label: 'Tiêu đề mục Về chúng tôi', type: 'text', def: 'Đứng phía sau, giữ hệ thống vận hành vững chắc' },
+      { key: 'home_about_text', label: 'Đoạn giới thiệu ngắn', type: 'textarea', def: 'Từ năm 2006, Tri Thức thường làm phần việc ít người thấy: thiết kế kiến trúc, xây dựng phần mềm lõi, tích hợp dữ liệu và vận hành hệ thống cho các tổ chức lớn. Chúng tôi không cần được nhắc tên, chỉ cần hệ thống chạy ổn định mỗi ngày.' },
       { key: 'home_about_link_label', label: 'Nhãn liên kết Về chúng tôi', type: 'text', def: 'Tìm hiểu về Tri Thức' },
       { key: 'home_about_link_url', label: 'Liên kết Về chúng tôi', type: 'text', def: '/gioi-thieu' },
       { key: 'home_news_kicker', label: 'Nhãn mục Tin tức', type: 'text', def: 'Kiến thức chuyển đổi số' },
