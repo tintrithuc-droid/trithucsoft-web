@@ -28,7 +28,7 @@ module.exports = async function seed(q) {
   ]);
 
   await ins('banners', [{
-    badge: '20 năm một hành trình đồng hành',
+    badge: '',
     title: 'Công nghệ và Tri thức\ncho quản lý hiện đại.',
     subtitle: 'Tri Thức đồng hành cùng cơ quan nhà nước và doanh nghiệp trong hiện đại hóa quản lý, điều hành và khai thác dữ liệu. Từ tư vấn, xây dựng phần mềm đến vận hành, chúng tôi giúp tổ chức làm việc hiệu quả, minh bạch và bền vững.',
     cta1_label: 'Đặt lịch tư vấn miễn phí', cta1_url: '/lien-he',
@@ -37,10 +37,10 @@ module.exports = async function seed(q) {
 
   const b = (grp, sort, o) => ({ grp, sort, ...o });
   await ins('blocks', [
-    b('stats', 1, { value: '20 năm', body: 'kinh nghiệm phần mềm và chuyển đổi số' }),
-    b('stats', 2, { value: '6', body: 'giải pháp phần mềm có demo trực tuyến' }),
-    b('stats', 3, { value: '7', body: 'dịch vụ tư vấn dự án CNTT trọn chu trình' }),
-    b('stats', 4, { value: '3', body: 'văn phòng tại TP.HCM, Thủ Đức và Cần Thơ' }),
+    b('stats', 1, { value: '20 năm', body: 'kinh nghiệm phần mềm và chuyển đổi số', active: false }),
+    b('stats', 2, { value: '6', body: 'giải pháp phần mềm có demo trực tuyến', active: false }),
+    b('stats', 3, { value: '7', body: 'dịch vụ tư vấn dự án CNTT trọn chu trình', active: false }),
+    b('stats', 4, { value: '3', body: 'văn phòng tại TP.HCM, Thủ Đức và Cần Thơ', active: false }),
 
     b('areas', 1, { icon: 'code', title: 'Giải pháp phần mềm', value: 'Xem 6 giải pháp', url: '/giai-phap',
       body: 'Phần mềm quản lý chuyên ngành\nHệ thống điều hành công việc\nBản đồ số GIS, AI, Big Data\nKho dữ liệu số và nền tảng tích hợp' }),
@@ -126,7 +126,7 @@ module.exports = async function seed(q) {
       'Hiện đại hóa cổng thông tin cho tỉnh, sở ngành và trường đại học.'),
   ]);
 
-  const pj = (sort, slug, title, category, client, result) => ({ sort, slug, title, category, client, result });
+  const pj = (sort, slug, title, category, client, result) => ({ sort, slug, title, category, client, result, featured: sort <= 3 });
   await ins('projects', [
     pj(1, 'ban-do-so-gis-tuyen-truyen-bau-cu-can-tho', 'Bản đồ số GIS tuyên truyền bầu cử ĐBQH khóa XVI và HĐND các cấp', 'GIS và bản đồ số', 'Sở Nội vụ TP. Cần Thơ', 'Tra cứu điểm bỏ phiếu, chỉ đường và thông tin ứng cử viên.'),
     pj(2, 'nang-cap-cong-thong-tin-dien-tu-tinh-ben-tre', 'Nâng cấp Cổng thông tin điện tử tỉnh Bến Tre', 'Cổng thông tin', 'Văn phòng UBND tỉnh Bến Tre', 'Hiện đại hóa cổng thông tin điện tử cấp tỉnh.'),
@@ -147,7 +147,7 @@ module.exports = async function seed(q) {
   ]);
 
   await ins('clients', ['Sở Nội vụ TP. Cần Thơ', 'Sở TN&MT Bắc Ninh', 'Văn phòng UBND tỉnh Bến Tre', 'Văn phòng Tỉnh ủy Vĩnh Long',
-    'Sở Công Thương Cà Mau', 'Trường ĐH Nông Lâm TP.HCM'].map((name, i) => ({ name, sort: i + 1 })));
+    'Sở Công Thương Cà Mau', 'Trường ĐH Nông Lâm TP.HCM'].map((name, i) => ({ name, sort: i + 1, active: false })));
 
   await ins('testimonials', [{
     quote: '[Cảm nhận của khách hàng: một hai câu về kết quả cụ thể sau khi dùng sản phẩm của Tri Thức.]',
@@ -156,8 +156,8 @@ module.exports = async function seed(q) {
 
   const page = (slug, title, lead, content) => ({ slug, title, lead, content });
   await ins('pages', [
-    page('gioi-thieu', 'Về Tri Thức', '20 năm, một hành trình, vạn lời tri ân.',
-      '<p>Thành lập năm 2006, Công ty Cổ phần Tin học Tri Thức hướng tới trở thành đơn vị công nghệ đồng hành hiệu quả trong hiện đại hóa quản lý, điều hành và khai thác dữ liệu.</p><h2>Phương châm</h2><p><strong>Uy tín, Chuyên nghiệp, Đồng hành phát triển.</strong></p><h2>Vì sao chọn Tri Thức</h2><ul><li>Giải pháp phù hợp thực tiễn</li><li>Kinh nghiệm triển khai nhiều lĩnh vực</li><li>Đồng hành từ tư vấn đến vận hành</li><li>Hỗ trợ nhanh chóng, lâu dài</li></ul><h2>Hành trình</h2><p>[Các cột mốc chính của Tri Thức qua 20 năm.]</p>'),
+    page('gioi-thieu', 'Về Tri Thức', 'Làm thật, làm kỹ, đồng hành lâu dài cùng khách hàng.',
+      '<p>Thành lập năm 2006, Công ty Cổ phần Tin học Tri Thức hướng tới trở thành đơn vị công nghệ đồng hành hiệu quả trong hiện đại hóa quản lý, điều hành và khai thác dữ liệu.</p><h2>Phương châm</h2><p><strong>Uy tín, Chuyên nghiệp, Đồng hành phát triển.</strong></p><h2>Vì sao chọn Tri Thức</h2><ul><li>Giải pháp phù hợp thực tiễn</li><li>Kinh nghiệm triển khai nhiều lĩnh vực</li><li>Đồng hành từ tư vấn đến vận hành</li><li>Hỗ trợ nhanh chóng, lâu dài</li></ul>'),
     page('tu-van-cntt', 'Tư vấn CNTT', 'Tư vấn dự án ứng dụng CNTT từ lúc lập đến lúc nghiệm thu, đúng quy định đầu tư công và đấu thầu.',
       '<h2>7 dịch vụ tư vấn</h2><ol><li>Quản lý dự án đầu tư ứng dụng CNTT</li><li>Lập báo cáo kinh tế kỹ thuật, nghiên cứu khả thi và thiết kế dự án</li><li>Thẩm tra hồ sơ thiết kế</li><li>Lập hồ sơ mời thầu và đánh giá hồ sơ dự thầu</li><li>Thẩm định hồ sơ mời thầu và kết quả lựa chọn nhà thầu</li><li>Giám sát dự án CNTT</li><li>Kiểm thử và vận hành thử hệ thống CNTT</li></ol><p>Ngoài ra, Tri Thức tư vấn chuyển đổi số cho tổ chức, số hóa và quản trị dữ liệu, đào tạo và chuyển giao công nghệ.</p>'),
     page('phan-mem-ban-quyen', 'Phần mềm bản quyền', 'Phần mềm chính hãng, xuất hóa đơn đầy đủ cho đơn vị.',
@@ -170,7 +170,7 @@ module.exports = async function seed(q) {
 
   const settings = {
     address: 'Tầng 3, Tòa nhà An Phú Plaza, 117-119 Lý Chính Thắng, phường Xuân Hòa, TP. Hồ Chí Minh',
-    tax_code: '0304363608', legal_rep: 'Đỗ Cao Trí', hotline: '088 679 2809', email: 'trithuc@trithucsoft.vn',
+    tax_code: '0304363608', hotline: '088 679 2809', email: 'trithuc@trithucsoft.vn',
     social_zalo: 'https://zalo.me/0886792809',
   };
   for (const [k, v] of Object.entries(settings)) {
