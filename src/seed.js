@@ -77,7 +77,8 @@ module.exports = async function seed(q) {
     b('offices', 3, { title: 'Chi nhánh Cần Thơ', body: '52 Đường B2, phường Hưng Phú, TP. Cần Thơ' }),
   ]);
 
-  const sol = (sort, slug, title, tag, icon, summary, extra = {}) => ({ sort, slug, title, tag, icon, summary, hero_title: title, hero_text: summary, ...extra });
+  const D = require('./seed-content');
+  const sol = (sort, slug, title, tag, icon, summary, extra = {}) => ({ sort, slug, title, tag, icon, summary, hero_title: title, hero_text: summary, ...extra, ...(D.solutions[slug] || {}) });
   await ins('solutions', [
     sol(1, 'quan-ly-dieu-hanh-cap-xa-phuong', 'Quản lý điều hành cấp xã, phường', 'Chính quyền số', 'gov',
       'Nhiệm vụ, công việc, dự án, kế hoạch, lịch họp và đánh giá KPI trên một hệ thống.', {
@@ -126,7 +127,7 @@ module.exports = async function seed(q) {
       'Hiện đại hóa cổng thông tin cho tỉnh, sở ngành và trường đại học.'),
   ]);
 
-  const pj = (sort, slug, title, category, client, result) => ({ sort, slug, title, category, client, result, featured: sort <= 3 });
+  const pj = (sort, slug, title, category, client, result) => ({ sort, slug, title, category, client, result, featured: sort <= 3, content: D.projects[slug] || '' });
   await ins('projects', [
     pj(1, 'ban-do-so-gis-tuyen-truyen-bau-cu-can-tho', 'Bản đồ số GIS tuyên truyền bầu cử ĐBQH khóa XVI và HĐND các cấp', 'GIS và bản đồ số', 'Sở Nội vụ TP. Cần Thơ', 'Tra cứu điểm bỏ phiếu, chỉ đường và thông tin ứng cử viên.'),
     pj(2, 'nang-cap-cong-thong-tin-dien-tu-tinh-ben-tre', 'Nâng cấp Cổng thông tin điện tử tỉnh Bến Tre', 'Cổng thông tin', 'Văn phòng UBND tỉnh Bến Tre', 'Hiện đại hóa cổng thông tin điện tử cấp tỉnh.'),
@@ -139,7 +140,7 @@ module.exports = async function seed(q) {
   await ins('posts', [
     { slug: 'ban-do-so-gis-tuyen-truyen-bau-cu-tai-tp-can-tho', title: 'Bản đồ số GIS tuyên truyền bầu cử tại TP. Cần Thơ', category: 'Phát triển phần mềm', status: 'published',
       excerpt: 'Tri Thức cùng Sở Nội vụ TP. Cần Thơ đưa bản đồ số vào công tác tuyên truyền bầu cử, giúp cử tri tra cứu điểm bỏ phiếu và thông tin ứng cử viên.',
-      content: '<p>[Nội dung bài viết. Cập nhật trong trang quản trị, mục Tin tức.]</p>' },
+      content: '<p>Phục vụ công tác tuyên truyền bầu cử đại biểu Quốc hội khóa XVI và đại biểu HĐND các cấp, Tri Thức cùng Sở Nội vụ TP. Cần Thơ xây dựng bản đồ số giúp cử tri tra cứu điểm bỏ phiếu ngay trên điện thoại.</p><p>Người dân tìm điểm bỏ phiếu theo địa chỉ hoặc vị trí hiện tại, được chỉ đường đến nơi và xem thông tin ứng cử viên theo đơn vị bầu cử.</p>' },
     { slug: 'bai-viet-hoat-dong-tu-van-mau', title: '[Tiêu đề bài viết mới nhất trong mục Hoạt động tư vấn]', category: 'Hoạt động tư vấn', status: 'draft',
       excerpt: '', content: '<p>[Nội dung bài viết.]</p>' },
     { slug: 'bai-viet-tin-ve-tri-thuc-mau', title: '[Tiêu đề bài viết mới nhất trong mục Tin về Tri Thức]', category: 'Tin về Tri Thức', status: 'draft',
@@ -154,14 +155,14 @@ module.exports = async function seed(q) {
     name: '[Họ tên]', role: '[Chức vụ]', org: '[Tên cơ quan]', sort: 1, active: false,
   }]);
 
-  const page = (slug, title, lead, content) => ({ slug, title, lead, content });
+  const page = (slug, title, lead, content) => ({ slug, title, lead, content: D.pages[slug] || content });
   await ins('pages', [
     page('gioi-thieu', 'Về Tri Thức', 'Làm thật, làm kỹ, đồng hành lâu dài cùng khách hàng.',
       '<p>Thành lập năm 2006, Công ty Cổ phần Tin học Tri Thức hướng tới trở thành đơn vị công nghệ đồng hành hiệu quả trong hiện đại hóa quản lý, điều hành và khai thác dữ liệu.</p><h2>Phương châm</h2><p><strong>Uy tín, Chuyên nghiệp, Đồng hành phát triển.</strong></p><h2>Vai trò của chúng tôi</h2><p>Phần lớn công việc của Tri Thức nằm ở tầng nền: kiến trúc, phần mềm lõi, tích hợp dữ liệu và vận hành. Chúng tôi thường làm việc phía sau, cùng các đơn vị triển khai và hạ tầng lớn, để hệ thống của khách hàng chạy ổn định và an toàn.</p><ul><li>Kiến trúc hệ thống ổn định, chịu tải lớn</li><li>Dữ liệu an toàn, tuân thủ quy định</li><li>Vận hành, bảo trì liên tục nhiều năm</li><li>Phối hợp kín đáo cùng đối tác triển khai</li></ul>'),
     page('tu-van-cntt', 'Tư vấn CNTT', 'Tư vấn dự án ứng dụng CNTT từ lúc lập đến lúc nghiệm thu, đúng quy định đầu tư công và đấu thầu.',
       '<h2>7 dịch vụ tư vấn</h2><ol><li>Quản lý dự án đầu tư ứng dụng CNTT</li><li>Lập báo cáo kinh tế kỹ thuật, nghiên cứu khả thi và thiết kế dự án</li><li>Thẩm tra hồ sơ thiết kế</li><li>Lập hồ sơ mời thầu và đánh giá hồ sơ dự thầu</li><li>Thẩm định hồ sơ mời thầu và kết quả lựa chọn nhà thầu</li><li>Giám sát dự án CNTT</li><li>Kiểm thử và vận hành thử hệ thống CNTT</li></ol><p>Ngoài ra, Tri Thức tư vấn chuyển đổi số cho tổ chức, số hóa và quản trị dữ liệu, đào tạo và chuyển giao công nghệ.</p>'),
     page('phan-mem-ban-quyen', 'Phần mềm bản quyền', 'Phần mềm chính hãng, xuất hóa đơn đầy đủ cho đơn vị.',
-      '<h2>Microsoft</h2><p>Windows 11, Windows Server 2025, Office LTSC 2024, Microsoft 365 Business.</p><h2>Bảo mật</h2><p>Bkav Pro Internet Security, Bkav Safe Kids, Kaspersky Standard.</p><h2>Thiết kế</h2><p>AutoCAD Full Toolsets 2027, AutoCAD LT 2027.</p><h2>Vietmap Live</h2><p>Vietmap Live Pro gói 12 tháng và 24 tháng, từ 500.000 đồng.</p><p>[Bảng giá chi tiết. Liên hệ hotline 088 679 2809 để nhận báo giá.]</p>'),
+      '<h2>Microsoft</h2><p>Windows 11, Windows Server 2025, Office LTSC 2024, Microsoft 365 Business.</p><h2>Bảo mật</h2><p>Bkav Pro Internet Security, Bkav Safe Kids, Kaspersky Standard.</p><h2>Thiết kế</h2><p>AutoCAD Full Toolsets 2027, AutoCAD LT 2027.</p><h2>Vietmap Live</h2><p>Vietmap Live Pro gói 12 tháng và 24 tháng, từ 500.000 đồng.</p><p>Liên hệ hotline 088 679 2809 để nhận báo giá theo số lượng và thời hạn sử dụng.</p>'),
     page('chinh-sach-chung', 'Chính sách chung', '', '<p>[Nội dung chính sách chung.]</p>'),
     page('dieu-khoan-su-dung', 'Điều khoản sử dụng', '', '<p>[Nội dung điều khoản sử dụng.]</p>'),
     page('chinh-sach-bao-mat', 'Chính sách bảo mật', '', '<p>[Nội dung chính sách bảo mật.]</p>'),
