@@ -13,7 +13,7 @@
         <% if (it.brochure) { %><a href="<%= it.brochure %>" class="btn btn-outline" download><%- icon('doc', 18, 'currentColor', 2) %>Tải tài liệu giới thiệu (PDF)</a><% } %>
       </div>
     </div>
-    <div class="sol-visual"><% if (it.image) { %><img src="<%= it.image %>" alt="Giao diện <%= it.title %>" fetchpriority="high"><% } else { %><span class="ico" style="width:96px;height:96px;border-radius:24px"><%- icon(it.icon, 48) %></span><% } %></div>
+    <div class="sol-visual"><% if (it.image) { %><img src="<%= it.image %>" alt="Giao diện <%= it.title %>" fetchpriority="high"><% } else { %><span class="gen-cover wide" role="img" aria-label="<%= it.title %>"><span class="gc-grid"></span><span class="gc-ring"></span><span class="gc-ico"><%- icon(it.icon, 44, 'currentColor', 1.6) %></span><% if (it.tag) { %><span class="gc-cat"><%= it.tag %></span><% } %></span><% } %></div>
   </div>
 </div></section>
 

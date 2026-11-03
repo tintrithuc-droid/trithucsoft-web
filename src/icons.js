@@ -35,4 +35,22 @@ function icon(name, size = 24, stroke = 'currentColor', sw = 1.8) {
 
 const ICON_OPTIONS = Object.entries(ICONS).map(([v, i]) => ({ value: v, label: i.label }));
 
-module.exports = { ICONS, icon, ICON_OPTIONS };
+// Ảnh bìa minh họa tự sinh khi bài viết, dự án chưa có ảnh thật: nền lưới kỹ thuật + biểu tượng theo chuyên mục.
+const COVER_RULES = [
+  [/gis|bản đồ/i, 'map'], [/cổng|thông tin điện tử|website/i, 'globe'], [/dữ liệu|csdl|data/i, 'database'],
+  [/giao thông|thủy|cảng|bến/i, 'ship'], [/rfid|lưu trữ/i, 'rfid'], [/môi trường|rác|giám sát/i, 'chart'],
+  [/an toàn|bảo mật/i, 'shield'], [/ai|trí tuệ/i, 'ai'], [/xử phạt|pháp/i, 'gavel'], [/chính quyền|xã|phường/i, 'gov'],
+  [/tư vấn/i, 'consult'], [/tin|chia sẻ|kiến thức/i, 'spark'],
+];
+function coverIcon(text) { for (const [re, n] of COVER_RULES) if (re.test(text || '')) return n; return 'code'; }
+function cover(category, title, variant = 'card') {
+  const name = coverIcon(`${category || ''} ${title || ''}`);
+  const big = variant === 'wide';
+  return `<span class="gen-cover${big ? ' wide' : ''}" role="img" aria-label="${String(category || 'Minh họa').replace(/"/g, '&quot;')}">`
+    + `<span class="gc-grid"></span><span class="gc-ring"></span>`
+    + `<span class="gc-ico">${icon(name, big ? 44 : 30, 'currentColor', 1.6)}</span>`
+    + (category ? `<span class="gc-cat">${String(category).replace(/</g, '&lt;')}</span>` : '')
+    + `</span>`;
+}
+
+module.exports = { ICONS, icon, ICON_OPTIONS, cover };

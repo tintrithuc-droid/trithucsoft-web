@@ -9,7 +9,7 @@
   </div>
 </div></section>
 <section class="section"><div class="wrap article-wrap">
-  <% if (item.image) { %><img class="article-cover" src="<%= item.image %>" alt="<%= item.title %>"><% } %>
+  <% if (item.image) { %><img class="article-cover" src="<%= item.image %>" alt="<%= item.title %>"><% } else { %><div class="article-cover gen"><%- cover(item.category, item.title, 'wide') %></div><% } %>
   <div class="prose"><%- item.content || '<p class="muted">Câu chuyện chi tiết của dự án đang được cập nhật.</p>' %></div>
 </div></section>
 <%- include('partials/cta') %>

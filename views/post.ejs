@@ -8,7 +8,7 @@
   </div>
 </div></section>
 <article class="section"><div class="wrap article-wrap">
-  <% if (item.cover) { %><img class="article-cover" src="<%= item.cover %>" alt="<%= item.title %>"><% } %>
+  <% if (item.cover) { %><img class="article-cover" src="<%= item.cover %>" alt="<%= item.title %>"><% } else { %><div class="article-cover gen"><%- cover(item.category, item.title, 'wide') %></div><% } %>
   <div class="prose"><%- item.content %></div>
 </div></article>
 <script type="application/ld+json"><%- JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: item.title, description: item.excerpt,
