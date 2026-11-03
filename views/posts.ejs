@@ -1,0 +1,23 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="wrap">
+  <%- include('partials/crumbs', { items: [['Tin tức']] }) %>
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:760px">
+    <span class="kicker"><%= s.home_news_kicker %></span><h1><%= s.home_news_title %></h1>
+  </div>
+  <% if (categories.length > 1) { %>
+  <nav class="filters" aria-label="Chuyên mục">
+    <a class="chip" href="/tin-tuc" aria-current="<%= !cat %>">Tất cả</a>
+    <% categories.forEach(c => { %><a class="chip" href="/tin-tuc?chuyen-muc=<%= encodeURIComponent(c) %>" aria-current="<%= cat === c %>"><%= c %></a><% }) %>
+  </nav>
+  <% } %>
+</div></section>
+<section class="section"><div class="wrap stack">
+  <% if (!posts.length) { %><p class="muted">Chưa có bài viết.</p><% } %>
+  <div class="grid g-320" style="gap:32px 24px"><% posts.forEach(p => { %><%- include('partials/post-card', { p }) %><% }) %></div>
+  <% if (pages > 1) { %>
+  <nav class="pager" aria-label="Phân trang">
+    <% for (let i = 1; i <= pages; i++) { %><a class="chip" href="?<%= cat ? 'chuyen-muc=' + encodeURIComponent(cat) + '&' : '' %>trang=<%= i %>" aria-current="<%= i === page %>"><%= i %></a><% } %>
+  </nav>
+  <% } %>
+</div></section>
+<%- include('partials/foot') %>

@@ -1,0 +1,43 @@
+<% const id = 'f_' + f.name; const val = v == null ? '' : v; %>
+<div class="f f-<%= f.type %>">
+  <% if (f.type === 'checkbox') { %>
+    <label class="chk"><input type="checkbox" name="<%= f.name %>" value="1"<%- (val === true || val === '1') ? ' checked' : '' %>> <span><%= f.label %></span></label>
+  <% } else { %>
+  <label for="<%= id %>"><%= f.label %><% if (f.required) { %> <span class="req">*</span><% } %></label>
+  <% if (f.type === 'textarea') { %>
+    <textarea id="<%= id %>" name="<%= f.name %>" rows="<%= String(val).length > 200 ? 6 : 3 %>"><%= val %></textarea>
+  <% } else if (f.type === 'code') { %>
+    <textarea id="<%= id %>" name="<%= f.name %>" rows="5" class="mono" spellcheck="false"><%= val %></textarea>
+  <% } else if (f.type === 'richtext') { %>
+    <div class="rte" data-rte="<%= id %>"><%- val %></div>
+    <input type="hidden" id="<%= id %>" name="<%= f.name %>" value="<%= val %>">
+  <% } else if (f.type === 'select') { %>
+    <select id="<%= id %>" name="<%= f.name %>"><% f.options.forEach(o => { %><option value="<%= o.value %>"<%- String(val) === o.value ? ' selected' : '' %>><%= o.label %></option><% }) %></select>
+    <% if (f.name === 'icon') { %><span class="icon-preview" data-icon-preview="<%= id %>"><%- icon(val || 'code', 22) %></span><% } %>
+  <% } else if (f.type === 'image' || f.type === 'file') { %>
+    <div class="img-field">
+      <% if (val && f.type === 'image') { %><img src="<%= val %>" alt="" class="thumb"><% } %>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <input type="text" id="<%= id %>" name="<%= f.name %>" value="<%= val %>" placeholder="Đường dẫn ảnh, hoặc chọn tệp bên dưới">
+        <input type="file" name="__file_<%= f.name %>" accept="<%= f.type === 'image' ? 'image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/x-icon' : 'application/pdf' %>">
+        <% if (val) { %><label class="chk small"><input type="checkbox" name="__clear_<%= f.name %>" value="1"> Xóa tệp hiện tại</label><% } %>
+      </div>
+    </div>
+  <% } else if (f.type === 'color') { %>
+    <div style="display:flex;gap:10px;align-items:center"><input type="color" value="<%= val %>" oninput="this.nextElementSibling.value=this.value"><input type="text" id="<%= id %>" name="<%= f.name %>" value="<%= val %>" style="max-width:140px" pattern="#[0-9a-fA-F]{3,8}"></div>
+  <% } else if (f.type === 'number') { %>
+    <input type="number" id="<%= id %>" name="<%= f.name %>" value="<%= val %>" style="max-width:140px">
+  <% } else if (f.type === 'datetime') { %>
+    <% const d = val ? new Date(val) : new Date(); const pad = n => String(n).padStart(2, '0'); const dv = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; %>
+    <input type="datetime-local" id="<%= id %>" name="<%= f.name %>" value="<%= dv %>" style="max-width:260px">
+  <% } else if (f.type === 'password') { %>
+    <input type="password" id="<%= id %>" name="<%= f.name %>" autocomplete="new-password">
+  <% } else if (f.type === 'repeater') { %>
+    <div class="rep" data-rep="<%= id %>" data-sub="<%= JSON.stringify(f.sub) %>"></div>
+    <input type="hidden" id="<%= id %>" name="<%= f.name %>" value="<%= JSON.stringify(val || []) %>">
+  <% } else { %>
+    <input type="text" id="<%= id %>" name="<%= f.name %>" value="<%= val %>"<%- f.datalist ? ` list="dl_${f.datalist}"` : '' %><%- f.required ? ' required' : '' %>>
+    <% if (f.datalist && lists[f.datalist]) { %><datalist id="dl_<%= f.datalist %>"><% lists[f.datalist].forEach(o => { %><option value="<%= o %>"><% }) %></datalist><% } %>
+  <% } %>
+  <% } %>
+</div>

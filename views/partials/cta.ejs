@@ -1,0 +1,13 @@
+<% if (s.cta_title) { %>
+<section>
+  <div class="wrap section">
+    <div class="cta">
+      <div><h2><%= typeof ctaTitle !== 'undefined' ? ctaTitle : s.cta_title %></h2><p><%= typeof ctaText !== 'undefined' ? ctaText : s.cta_text %></p></div>
+      <div class="btn-row" style="margin:0">
+        <a href="<%= typeof ctaUrl !== 'undefined' ? ctaUrl : s.cta_button_url %>" class="btn btn-white"><%= typeof ctaLabel !== 'undefined' ? ctaLabel : s.cta_button_label %></a>
+        <% if (s.hotline && !s.hotline.includes('[')) { %><a href="tel:<%= tel(s.hotline) %>" class="btn btn-ghost-white">Gọi <%= s.hotline %></a><% } %>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>

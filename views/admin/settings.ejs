@@ -1,0 +1,12 @@
+<%- include('_top', { title: 'Cấu hình website' }) %>
+<% const g = groups.find(x => x.id === tab); %>
+<nav class="tabs"><% groups.forEach(x => { %><a href="?tab=<%= x.id %>" class="<%= x.id === tab ? 'on' : '' %>"><%= x.label %></a><% }) %></nav>
+<form method="post" action="/quan-tri/cau-hinh" enctype="multipart/form-data" class="panel form">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input type="hidden" name="_tab" value="<%= g.id %>">
+  <% g.fields.forEach(f => { %>
+    <%- include('_field', { f: { name: f.key, label: f.label, type: f.type }, v: s[f.key], lists: {} }) %>
+  <% }) %>
+  <div class="actions"><button type="submit" class="btn primary">Lưu thay đổi</button><a href="/" target="_blank" rel="noopener" class="btn">Xem website ↗</a></div>
+</form>
+<%- include('_bottom') %>

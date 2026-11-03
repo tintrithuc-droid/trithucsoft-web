@@ -1,0 +1,17 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="wrap">
+  <%- include('partials/crumbs', { items: [['Giải pháp']] }) %>
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:760px">
+    <span class="kicker"><%= s.home_solutions_kicker %></span>
+    <h1><%= s.home_solutions_title %></h1>
+  </div>
+</div></section>
+<section class="section"><div class="wrap">
+  <div class="grid g-340">
+    <% solutions.forEach((x, i) => { %>
+    <a href="/giai-phap/<%= x.slug %>" class="card reveal"><span class="ico"><%- icon(x.icon) %></span><span class="sol-no"><%= String(i + 1).padStart(2, '0') %><%= x.tag ? ' · ' + x.tag : '' %></span><h3><%= x.title %></h3><p><%= x.summary %></p><span class="go">Xem chi tiết →</span></a>
+    <% }) %>
+  </div>
+</div></section>
+<%- include('partials/cta') %>
+<%- include('partials/foot') %>

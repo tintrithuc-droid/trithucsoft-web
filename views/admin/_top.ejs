@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title><%= typeof title !== 'undefined' ? title + ' · ' : '' %>Quản trị website Tri Thức</title>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/admin.css">
+<% if (typeof needEditor !== 'undefined' && needEditor) { %><link rel="stylesheet" href="/vendor/quill/quill.snow.css"><% } %>
+</head>
+<body>
+<% if (me) { %>
+<div class="shell">
+<aside class="side" id="side">
+  <a href="/quan-tri" class="side-brand"><span class="mk">TT</span><span>Quản trị website</span></a>
+  <% const nav = (href, label, ic, match) => `<a href="${href}" class="${(match === '/' ? reqPath === '/' : reqPath.startsWith(match)) ? 'on' : ''}">${icon(ic, 18)}<span>${label}</span></a>`; %>
+  <nav>
+    <%- nav('/quan-tri', 'Tổng quan', 'report', '/') %>
+    <%- nav('/quan-tri/yeu-cau', 'Yêu cầu tư vấn', 'users', '/yeu-cau') %>
+    <span class="side-h">Giao diện chung</span>
+    <% if (me.role === 'admin') { %><%- nav('/quan-tri/cau-hinh', 'Cấu hình website', 'spark', '/cau-hinh') %><% } %>
+    <%- nav('/quan-tri/r/banners', 'Banner trang chủ', 'globe', '/r/banners') %>
+    <%- nav('/quan-tri/r/menu', 'Menu và chân trang', 'code', '/r/menu') %>
+    <%- nav('/quan-tri/r/blocks', 'Khối trang chủ', 'chart', '/r/blocks') %>
+    <span class="side-h">Nội dung</span>
+    <%- nav('/quan-tri/r/solutions', 'Giải pháp', 'briefcase', '/r/solutions') %>
+    <%- nav('/quan-tri/r/projects', 'Dự án tiêu biểu', 'award', '/r/projects') %>
+    <%- nav('/quan-tri/r/posts', 'Tin tức', 'doc', '/r/posts') %>
+    <%- nav('/quan-tri/r/pages', 'Trang tĩnh', 'doc', '/r/pages') %>
+    <%- nav('/quan-tri/r/clients', 'Khách hàng', 'gov', '/r/clients') %>
+    <%- nav('/quan-tri/r/testimonials', 'Cảm nhận', 'handshake', '/r/testimonials') %>
+    <%- nav('/quan-tri/thu-vien', 'Thư viện ảnh, tệp', 'database', '/thu-vien') %>
+    <span class="side-h">Hệ thống</span>
+    <% if (me.role === 'admin') { %><%- nav('/quan-tri/r/users', 'Tài khoản', 'shield', '/r/users') %><% } %>
+    <%- nav('/quan-tri/mat-khau', 'Đổi mật khẩu', 'check', '/mat-khau') %>
+  </nav>
+  <div class="side-foot">
+    <a href="/" target="_blank" rel="noopener">Xem website ↗</a>
+    <form method="post" action="/quan-tri/dang-xuat"><input type="hidden" name="_csrf" value="<%= csrf %>"><button type="submit">Đăng xuất</button></form>
+    <small><%= me.name || me.email %> · <%= me.role === 'admin' ? 'Quản trị viên' : 'Biên tập viên' %></small>
+  </div>
+</aside>
+<div class="main">
+  <header class="topbar"><button type="button" class="menu-btn" onclick="document.getElementById('side').classList.toggle('open')" aria-label="Mở menu">☰</button><span><%= typeof title !== 'undefined' ? title : '' %></span></header>
+  <div class="content">
+  <% if (flash) { %><div class="flash <%= flash.type %>" role="status"><%= flash.text %></div><% } %>
+<% } %>

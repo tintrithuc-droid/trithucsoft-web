@@ -1,0 +1,24 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="wrap">
+  <%- include('partials/crumbs', { items: [['Tin tức', '/tin-tuc'], [item.title]] }) %>
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:860px">
+    <span class="post-meta"><a href="/tin-tuc?chuyen-muc=<%= encodeURIComponent(item.category) %>"><%= item.category %></a> · <time datetime="<%= new Date(item.published_at).toISOString() %>"><%= fmtDate(item.published_at) %></time></span>
+    <h1><%= item.title %></h1>
+    <% if (item.excerpt) { %><p class="lead"><%= item.excerpt %></p><% } %>
+  </div>
+</div></section>
+<article class="section"><div class="wrap article-wrap">
+  <% if (item.cover) { %><img class="article-cover" src="<%= item.cover %>" alt="<%= item.title %>"><% } %>
+  <div class="prose"><%- item.content %></div>
+</div></article>
+<script type="application/ld+json"><%- JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: item.title, description: item.excerpt,
+  datePublished: new Date(item.published_at).toISOString(), dateModified: new Date(item.updated_at).toISOString(),
+  image: item.cover ? base + item.cover : undefined, publisher: { '@type': 'Organization', name: s.company_name } }).replace(/</g, '\\u003c') %></script>
+<% if (related.length) { %>
+<section class="band-white"><div class="wrap section stack" style="gap:28px">
+  <h2 class="h2" style="font-size:30px">Bài viết liên quan</h2>
+  <div class="grid g-320" style="gap:24px"><% related.forEach(p => { %><%- include('partials/post-card', { p }) %><% }) %></div>
+</div></section>
+<% } %>
+<%- include('partials/cta') %>
+<%- include('partials/foot') %>

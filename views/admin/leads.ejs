@@ -1,0 +1,15 @@
+<%- include('_top', { title: 'Yêu cầu tư vấn' }) %>
+<div class="list-head">
+  <nav class="tabs" style="margin:0"><a href="?" class="<%= !st ? 'on' : '' %>">Tất cả</a><% Object.entries(LEAD_STATUS).forEach(([k, l]) => { %><a href="?trang_thai=<%= k %>" class="<%= st === k ? 'on' : '' %>"><%= l %></a><% }) %></nav>
+  <a href="/quan-tri/yeu-cau/xuat.csv" class="btn">Tải về Excel (CSV)</a>
+</div>
+<div class="panel" style="padding:0;overflow:auto">
+<table class="tbl">
+  <thead><tr><th>Mã</th><th>Người gửi</th><th>Lĩnh vực</th><th>Trạng thái</th><th>Thời gian</th></tr></thead>
+  <tbody>
+    <% if (!rows.length) { %><tr><td colspan="5" class="muted">Chưa có yêu cầu.</td></tr><% } %>
+    <% rows.forEach(l => { %><tr><td><a href="/quan-tri/yeu-cau/<%= l.id %>"><%= l.code %></a></td><td><b><%= l.name %></b><br><small class="muted"><%= l.org %> · <%= l.phone %> <%= l.email %></small></td><td><%= l.need %></td><td><span class="st st-<%= l.status %>"><%= LEAD_STATUS[l.status] %></span></td><td class="muted"><%= new Date(l.created_at).toLocaleString('vi-VN') %></td></tr><% }) %>
+  </tbody>
+</table>
+</div>
+<%- include('_bottom') %>

@@ -1,0 +1,40 @@
+<%- include('_top', { title: R.label }) %>
+<% const labelOf = n => (R.fields.find(f => f.name === n) || { label: n }).label.replace(/ \(.*\)$/, '');
+   const fieldOf = n => R.fields.find(f => f.name === n) || {};
+   const show = (row, n) => {
+     const f = fieldOf(n); const v = row[n];
+     if (f.type === 'checkbox') return v ? '<span class="st st-done">Có</span>' : '<span class="st st-spam">Không</span>';
+     if (f.type === 'select') { const o = f.options.find(o => o.value === v); return o ? o.label : v; }
+     if (f.type === 'image') return v ? `<img src="${v}" alt="" class="mini">` : '';
+     if (f.type === 'datetime') return fmtDate(v);
+     return String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]).slice(0, 90);
+   }; %>
+<div class="list-head">
+  <div>
+    <% if (R.hint) { %><p class="muted" style="margin:0 0 8px"><%= R.hint %></p><% } %>
+    <form method="get" class="filters">
+      <% if (R.filter) { %><select name="<%= R.filter.name %>" onchange="this.form.submit()"><option value="">Tất cả</option><% R.filter.options.forEach(o => { %><option value="<%= o.value %>"<%- filter === o.value ? ' selected' : '' %>><%= o.label %></option><% }) %></select><% } %>
+      <input type="search" name="tim" value="<%= kw %>" placeholder="Tìm kiếm">
+      <button class="btn" type="submit">Lọc</button>
+    </form>
+  </div>
+  <a href="/quan-tri/r/<%= resKey %>/moi<%= filter ? '?' + R.filter.name + '=' + filter : '' %>" class="btn primary">+ Thêm <%= R.singular %></a>
+</div>
+<div class="panel" style="padding:0;overflow:auto">
+  <table class="tbl">
+    <thead><tr><% R.list.forEach(n => { %><th><%= labelOf(n) %></th><% }) %><th style="width:1%"></th></tr></thead>
+    <tbody>
+      <% if (!rows.length) { %><tr><td colspan="<%= R.list.length + 1 %>" class="muted">Chưa có dữ liệu.</td></tr><% } %>
+      <% rows.forEach(row => { %>
+      <tr>
+        <% R.list.forEach((n, i) => { %><td><% if (i === 0) { %><a href="/quan-tri/r/<%= resKey %>/<%= row.id %>"><b><%- show(row, n) || '(chưa đặt tên)' %></b></a><% } else { %><%- show(row, n) %><% } %></td><% }) %>
+        <td class="row-actions">
+          <a href="/quan-tri/r/<%= resKey %>/<%= row.id %>" class="btn sm">Sửa</a>
+          <% if (R.publicPath && row.slug) { %><a href="<%= R.publicPath + row.slug %>" target="_blank" rel="noopener" class="btn sm">Xem</a><% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('_bottom') %>

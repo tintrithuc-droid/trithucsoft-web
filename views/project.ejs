@@ -1,0 +1,16 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="wrap">
+  <%- include('partials/crumbs', { items: [['Dự án', '/du-an'], [item.title]] }) %>
+  <div style="display:flex;flex-direction:column;gap:18px;max-width:860px">
+    <% if (item.category) { %><span class="tag"><%= item.category %></span><% } %>
+    <h1><%= item.title %></h1>
+    <% if (item.client) { %><p class="muted">Đơn vị: <b style="color:var(--ink)"><%= item.client %></b></p><% } %>
+    <% if (item.result) { %><p class="lead"><%= item.result %></p><% } %>
+  </div>
+</div></section>
+<section class="section"><div class="wrap article-wrap">
+  <% if (item.image) { %><img class="article-cover" src="<%= item.image %>" alt="<%= item.title %>"><% } %>
+  <div class="prose"><%- item.content || '<p class="muted">Câu chuyện chi tiết của dự án đang được cập nhật.</p>' %></div>
+</div></section>
+<%- include('partials/cta') %>
+<%- include('partials/foot') %>

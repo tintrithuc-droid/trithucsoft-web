@@ -1,0 +1,69 @@
+<%- include('partials/head') %>
+<% const needs = String(s.contact_needs || '').split('\n').map(x => x.trim()).filter(Boolean);
+   const inv = k => err[k] ? 'true' : 'false'; %>
+<div class="wrap contact">
+  <div class="contact-form">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h1><%= s.contact_title %></h1>
+      <p class="lead" style="font-size:17px"><%= s.contact_intro %></p>
+    </div>
+    <% if (sent) { %>
+    <div class="ok" role="status">
+      <div style="display:flex;align-items:center;gap:12px"><%- icon('check', 28, '#0F766E', 2.2) %><h2>Đã nhận yêu cầu của <%= sent.name %></h2></div>
+      <p>Chúng tôi sẽ liên hệ qua số <%= sent.phone %> trong giờ làm việc. Mã yêu cầu của bạn: <b><%= sent.code %></b>.</p>
+      <a href="/lien-he" class="btn btn-outline btn-sm" style="align-self:flex-start">Gửi yêu cầu khác</a>
+    </div>
+    <% } else { %>
+    <% if (Object.keys(err).length) { %><div role="alert" class="ferr" style="font-size:15px">Vui lòng kiểm tra lại các mục được đánh dấu bên dưới.</div><% } %>
+    <form method="post" action="/lien-he" novalidate style="display:flex;flex-direction:column;gap:20px">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+      <div class="fields">
+        <% [['name', 'Họ và tên', 'text', 'name', true], ['org', 'Cơ quan, đơn vị', 'text', 'organization', true], ['phone', 'Số điện thoại', 'tel', 'tel', true], ['email', 'Email', 'email', 'email', false]].forEach(([k, l, t, ac, r]) => { %>
+        <div class="field">
+          <label for="f-<%= k %>"><%= l %><% if (r) { %> <span class="req">*</span><% } %></label>
+          <input id="f-<%= k %>" name="<%= k %>" class="fld" type="<%= t %>" autocomplete="<%= ac %>" value="<%= form[k] || '' %>" aria-invalid="<%= inv(k) %>"<%- err[k] ? ` aria-describedby="e-${k}"` : '' %><%- r ? ' required' : '' %>>
+          <% if (err[k]) { %><span id="e-<%= k %>" class="ferr"><%= err[k] %></span><% } %>
+        </div>
+        <% }) %>
+      </div>
+      <div class="field">
+        <label for="f-need">Lĩnh vực quan tâm</label>
+        <select id="f-need" name="need" class="fld">
+          <option value="">Chọn một lĩnh vực</option>
+          <% needs.forEach(n => { %><option<%- form.need === n ? ' selected' : '' %>><%= n %></option><% }) %>
+          <% if (form.need && !needs.includes(form.need)) { %><option selected><%= form.need %></option><% } %>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-msg">Bạn muốn trao đổi điều gì?</label>
+        <textarea id="f-msg" name="msg" class="fld" rows="4" placeholder="Ví dụ: đơn vị muốn số hóa quy trình tiếp nhận hồ sơ"><%= form.msg || '' %></textarea>
+      </div>
+      <div class="field">
+        <label class="agree"><input type="checkbox" name="agree" value="1"<%- form.agree ? ' checked' : '' %> aria-invalid="<%= inv('agree') %>"<%- err.agree ? ' aria-describedby="e-agree"' : '' %>>
+          <span>Tôi đồng ý để <%= s.site_name %> dùng thông tin trên nhằm liên hệ tư vấn, theo <a href="/bao-ve-du-lieu-ca-nhan">Chính sách bảo vệ dữ liệu cá nhân</a>. <span class="req">*</span></span></label>
+        <% if (err.agree) { %><span id="e-agree" class="ferr"><%= err.agree %></span><% } %>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+        <button type="submit" class="btn btn-primary" style="font-weight:700">Gửi yêu cầu</button>
+        <span class="muted" style="font-size:14px">Các mục có dấu <span class="req">*</span> là bắt buộc.</span>
+      </div>
+    </form>
+    <% } %>
+  </div>
+  <aside class="aside">
+    <div class="aside-dark">
+      <h2 style="font-size:22px">Liên hệ trực tiếp</h2>
+      <% if (s.hotline) { %><div><small>Hotline tư vấn</small><a href="tel:<%= tel(s.hotline) %>" style="font-size:24px;font-weight:800"><%= s.hotline %></a></div><% } %>
+      <% if (s.email) { %><div><small>Email</small><a href="mailto:<%= s.email %>" style="font-weight:600"><%= s.email %></a></div><% } %>
+      <% if (s.working_hours) { %><div><small>Giờ làm việc</small><%= s.working_hours %></div><% } %>
+      <% if (s.social_zalo) { %><a href="<%= s.social_zalo %>" target="_blank" rel="noopener" class="btn btn-white btn-sm">Nhắn tin qua Zalo OA</a><% } %>
+    </div>
+    <div class="aside-map">
+      <% if (s.map_embed && /^https:\/\/www\.google\.com\/maps\//.test(s.map_embed)) { %><iframe src="<%= s.map_embed %>" loading="lazy" title="Bản đồ văn phòng" referrerpolicy="no-referrer-when-downgrade"></iframe><% } %>
+      <div><b><%= s.company_name %></b><% if (s.tax_code) { %><span class="muted" style="font-size:14px">Mã số thuế: <%= s.tax_code %></span><% } %>
+        <% if (offices.length) { offices.forEach(o => { %><span style="font-size:15px;margin-top:8px"><b><%= o.title %></b><br><span class="muted"><%= o.body %></span></span><% }) } else { %><span class="muted" style="font-size:15px"><%= s.address %></span><% } %></div>
+    </div>
+  </aside>
+</div>
+<%- include('partials/foot') %>

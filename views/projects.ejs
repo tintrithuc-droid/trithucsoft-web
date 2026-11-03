@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="wrap">
+  <%- include('partials/crumbs', { items: [['Dự án']] }) %>
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:760px">
+    <span class="kicker"><%= s.home_projects_kicker %></span><h1><%= s.home_projects_title %></h1>
+  </div>
+  <% if (categories.length > 1) { %>
+  <nav class="filters" aria-label="Lọc theo lĩnh vực">
+    <a class="chip" href="/du-an" aria-current="<%= !cat %>">Tất cả</a>
+    <% categories.forEach(c => { %><a class="chip" href="/du-an?linh-vuc=<%= encodeURIComponent(c) %>" aria-current="<%= cat === c %>"><%= c %></a><% }) %>
+  </nav>
+  <% } %>
+</div></section>
+<section class="section"><div class="wrap">
+  <% if (!projects.length) { %><p class="muted">Chưa có dự án trong lĩnh vực này.</p><% } %>
+  <div class="grid g-340"><% projects.forEach(p => { %><%- include('partials/project-card', { p }) %><% }) %></div>
+</div></section>
+<%- include('partials/cta') %>
+<%- include('partials/foot') %>

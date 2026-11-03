@@ -1,0 +1,9 @@
+<article class="proj reveal" data-cat="<%= p.category %>">
+  <div class="thumb"><% if (p.image) { %><img src="<%= p.image %>" alt="" loading="lazy"><% } else { %>Ảnh triển khai thực tế<% } %></div>
+  <div class="proj-body">
+    <% if (p.category) { %><span class="tag"><%= p.category %></span><% } %>
+    <h3><%= p.title %></h3>
+    <% if (p.result) { %><p><%= p.result %></p><% } %>
+    <a href="/du-an/<%= p.slug %>" class="go">Đọc câu chuyện dự án →</a>
+  </div>
+</article>
