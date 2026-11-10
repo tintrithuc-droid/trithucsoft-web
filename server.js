@@ -68,7 +68,8 @@ app.use((err, req, res, next) => {
 
 if (require.main === module) {
   migrate().then(() => {
-    app.listen(PORT, () => console.log(`Website Tri Thức chạy tại http://localhost:${PORT}  (quản trị: /quan-tri)`));
+    // HOST=127.0.0.1 khi đặt sau Caddy/IIS để không mở cổng Node ra ngoài
+    app.listen(PORT, process.env.HOST || undefined, () => console.log(`Website Tri Thức chạy tại http://localhost:${PORT}  (quản trị: /quan-tri)`));
   }).catch(e => { console.error('Không kết nối được cơ sở dữ liệu:', e.message); process.exit(1); });
 }
 

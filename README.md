@@ -24,6 +24,10 @@ Mở `http://<máy-chủ>:3000`. Trang quản trị ở `/quan-tri`, đăng nh�
 
 Khi chạy thử bằng `http://` (chưa có HTTPS), đặt `COOKIE_SECURE=0` trong `.env`, nếu không sẽ không đăng nhập được.
 
+## Windows Server
+
+Bộ script PowerShell cài đặt, cập nhật, sao lưu và gỡ website trên Windows Server (không cần Docker, có HTTPS tự động) ở [`trien-khai/windows`](trien-khai/windows/HUONG-DAN.md).
+
 ## Chạy trực tiếp (không Docker)
 
 Cần Node.js 20 trở lên và PostgreSQL.
