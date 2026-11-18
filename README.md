@@ -46,9 +46,10 @@ Kiểm thử tự động: `TEST_DATABASE_URL=postgres://... npm test` (dùng m�
 |---|---|
 | Cấu hình website | Logo, logo nền tối, favicon, màu chủ đạo, dòng mô tả dưới logo, nút đầu trang, thanh thông báo, tiêu đề các mục trang chủ, thông tin pháp lý, hotline, email, bản đồ, mạng xã hội, chân trang, SEO, mã đo lường, llms.txt |
 | Banner trang chủ | Thông điệp chính, mô tả, ảnh, 2 nút. Nhiều banner thì tự chuyển |
-| Menu và chân trang | Menu đầu trang, 2 cột liên kết chân trang, dòng liên kết pháp lý |
+| Menu và chân trang | Menu đầu trang (có danh sách thả xuống: điền "Thuộc menu" là liên kết của mục cha), 2 cột liên kết chân trang, dòng liên kết pháp lý |
+| Theo đối tượng khách hàng | Trang `/danh-cho/co-quan-nha-nuoc` và `/danh-cho/doanh-nghiep`, khối chọn đối tượng trên trang chủ. Mỗi giải pháp, dự án chọn đối tượng; chữ chỉnh trong Cấu hình website, thẻ "Theo đối tượng khách hàng" |
 | Khối trang chủ | Số liệu, 3 mảng hoạt động, 7 dịch vụ tư vấn, quy trình, phần mềm bản quyền, đổi mới sáng tạo, điểm mạnh, chứng nhận, văn phòng |
-| Giải pháp | Trang chi tiết từng giải pháp: bài toán, phân hệ, kết quả, tuân thủ, câu hỏi thường gặp, tài liệu PDF, Live Demo |
+| Giải pháp | Trang chi tiết từng giải pháp: bài toán, phân hệ, kết quả, tuân thủ, câu hỏi thường gặp, tài liệu PDF, Live Demo; nút "Đăng ký demo" điền sẵn tên giải pháp vào form liên hệ |
 | Dự án, Tin tức, Trang tĩnh | Soạn thảo có định dạng, ảnh, SEO riêng, bản nháp, hẹn giờ đăng |
 | Khách hàng, Cảm nhận | Logo và lời cảm nhận hiển thị trên trang chủ |
 | Yêu cầu tư vấn | Xem, đổi trạng thái, ghi chú, xuất CSV mở bằng Excel; báo email nếu cấu hình SMTP |
@@ -62,7 +63,9 @@ Trang Tổng quan liệt kê mọi chỗ còn ghi trong ngoặc vuông, ví dụ
 - HTML dựng trên máy chủ, mỗi trang có tiêu đề, mô tả, canonical, ảnh chia sẻ riêng
 - Đường dẫn tiếng Việt không dấu, tự sinh từ tiêu đề
 - `sitemap.xml`, `robots.txt`, `llms.txt` tự sinh
-- Dữ liệu có cấu trúc Schema.org: Organization, BreadcrumbList, Article, FAQPage
+- Dữ liệu có cấu trúc Schema.org: Organization, WebSite, BreadcrumbList, Article, FAQPage, Service (giải pháp), CreativeWork (dự án)
+- Ảnh có sẵn width/height (đọc từ tệp) nên không xô lệch bố cục khi tải; font Be Vietnam Pro tự lưu tại `public/fonts`, không phụ thuộc Google Fonts
+- Header `Permissions-Policy` tắt camera, micro, vị trí, thanh toán
 - Cho phép phóng to trên điện thoại, điều hướng bằng bàn phím, tôn trọng chế độ giảm chuyển động
 - Nút Gọi ngay và Zalo nổi trên điện thoại
 

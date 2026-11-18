@@ -19,7 +19,7 @@
       <input type="hidden" name="_csrf" value="<%= csrf %>">
       <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
       <div class="fields">
-        <% [['name', 'Họ và tên', 'text', 'name', true], ['org', 'Cơ quan, đơn vị', 'text', 'organization', true], ['phone', 'Số điện thoại', 'tel', 'tel', true], ['email', 'Email', 'email', 'email', false]].forEach(([k, l, t, ac, r]) => { %>
+        <% [['name', 'Họ và tên', 'text', 'name', true], ['org', 'Cơ quan / doanh nghiệp', 'text', 'organization', true], ['phone', 'Số điện thoại', 'tel', 'tel', true], ['email', 'Email', 'email', 'email', false]].forEach(([k, l, t, ac, r]) => { %>
         <div class="field">
           <label for="f-<%= k %>"><%= l %><% if (r) { %> <span class="req">*</span><% } %></label>
           <input id="f-<%= k %>" name="<%= k %>" class="fld" type="<%= t %>" autocomplete="<%= ac %>" value="<%= form[k] || '' %>" aria-invalid="<%= inv(k) %>"<%- err[k] ? ` aria-describedby="e-${k}"` : '' %><%- r ? ' required' : '' %>>
@@ -37,7 +37,7 @@
       </div>
       <div class="field">
         <label for="f-msg">Bạn muốn trao đổi điều gì?</label>
-        <textarea id="f-msg" name="msg" class="fld" rows="4" placeholder="Ví dụ: đơn vị muốn số hóa quy trình tiếp nhận hồ sơ"><%= form.msg || '' %></textarea>
+        <textarea id="f-msg" name="msg" class="fld" rows="4" placeholder="Ví dụ: số hóa quy trình tiếp nhận hồ sơ, quản lý công việc nội bộ, mua bản quyền Microsoft 365"><%= form.msg || '' %></textarea>
       </div>
       <div class="field">
         <label class="agree"><input type="checkbox" name="agree" value="1"<%- form.agree ? ' checked' : '' %> aria-invalid="<%= inv('agree') %>"<%- err.agree ? ' aria-describedby="e-agree"' : '' %>>

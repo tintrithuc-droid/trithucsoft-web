@@ -6,6 +6,23 @@
     var o = w.classList.toggle('open'); t.setAttribute('aria-expanded', o ? 'true' : 'false');
   });
 
+  // Menu thả xuống: bấm nút mũi tên để mở/đóng (bàn phím, điện thoại); Esc hoặc bấm ra ngoài để đóng
+  var subs = [].slice.call(document.querySelectorAll('.nav-item.has-sub'));
+  var closeAll = function (except) {
+    subs.forEach(function (it) { if (it !== except) { it.classList.remove('open'); it.querySelector('.sub-toggle').setAttribute('aria-expanded', 'false'); } });
+  };
+  subs.forEach(function (it) {
+    var b = it.querySelector('.sub-toggle');
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var o = it.classList.toggle('open'); b.setAttribute('aria-expanded', o ? 'true' : 'false'); closeAll(it);
+    });
+  });
+  if (subs.length) {
+    document.addEventListener('click', function (e) { if (!e.target.closest('.nav-item.has-sub')) closeAll(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+  }
+
   // Banner trang chủ tự chuyển
   var slides = [].slice.call(document.querySelectorAll('.hero-slide')), dots = [].slice.call(document.querySelectorAll('.hero-dots button'));
   if (slides.length > 1) {

@@ -71,4 +71,44 @@ function fmtDate(d) {
   return `${String(x.getDate()).padStart(2, '0')}/${String(x.getMonth() + 1).padStart(2, '0')}/${x.getFullYear()}`;
 }
 
-module.exports = { slugify, cleanHtml, csrf, upload, UPLOAD_DIR, publicUploadPath, fmtDate };
+// Kích thước ảnh (đọc phần đầu tệp PNG, JPEG, GIF, WebP) để ghi width/height vào thẻ <img>,
+// giúp trình duyệt giữ chỗ trước khi ảnh tải xong (không xô lệch bố cục, tốt cho Core Web Vitals).
+const dimCache = new Map();
+function readDim(buf) {
+  if (buf.length > 24 && buf.readUInt32BE(0) === 0x89504e47) return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+  if (buf.length > 10 && buf.toString('ascii', 0, 3) === 'GIF') return [buf.readUInt16LE(6), buf.readUInt16LE(8)];
+  if (buf.length > 30 && buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WEBP') {
+    const k = buf.toString('ascii', 12, 16);
+    if (k === 'VP8X') return [1 + buf.readUIntLE(24, 3), 1 + buf.readUIntLE(27, 3)];
+    if (k === 'VP8 ') return [buf.readUInt16LE(26) & 0x3fff, buf.readUInt16LE(28) & 0x3fff];
+    if (k === 'VP8L') { const b = buf.readUInt32LE(21); return [1 + (b & 0x3fff), 1 + ((b >> 14) & 0x3fff)]; }
+  }
+  if (buf.length > 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+    let i = 2;
+    while (i + 9 < buf.length) {
+      if (buf[i] !== 0xff) { i++; continue; }
+      const m = buf[i + 1];
+      if (m >= 0xc0 && m <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(m)) return [buf.readUInt16BE(i + 7), buf.readUInt16BE(i + 5)];
+      i += 2 + buf.readUInt16BE(i + 2);
+    }
+  }
+  return null;
+}
+function imgDim(url) {
+  if (!url || !/^\/uploads\//.test(url) || url.includes('..')) return null;
+  if (dimCache.has(url)) return dimCache.get(url);
+  let d = null;
+  try {
+    const f = path.join(UPLOAD_DIR, decodeURIComponent(url.slice('/uploads/'.length)));
+    const fd = fs.openSync(f, 'r'); const buf = Buffer.alloc(65536);
+    const n = fs.readSync(fd, buf, 0, buf.length, 0); fs.closeSync(fd);
+    d = readDim(buf.subarray(0, n));
+  } catch { d = null; }
+  if (dimCache.size > 2000) dimCache.clear();
+  dimCache.set(url, d);
+  return d;
+}
+// Chuỗi thuộc tính width/height cho thẻ <img>, rỗng nếu không đọc được
+function wh(url) { const d = imgDim(url); return d && d[0] && d[1] ? ` width="${d[0]}" height="${d[1]}"` : ''; }
+
+module.exports = { slugify, cleanHtml, csrf, upload, UPLOAD_DIR, publicUploadPath, fmtDate, imgDim, wh };

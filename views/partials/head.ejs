@@ -21,10 +21,8 @@
 <% if (s.google_verify) { %><meta name="google-site-verification" content="<%= s.google_verify %>"><% } %>
 <meta name="theme-color" content="<%= accent %>">
 <% if (s.favicon) { %><link rel="icon" href="<%= s.favicon %>"><% } else { %><link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml"><% } %>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/css/site.css">
+<link rel="stylesheet" href="/static/css/fonts.css?v=<%= assetV %>">
+<link rel="stylesheet" href="/static/css/site.css?v=<%= assetV %>">
 <style>:root{--accent:<%= accent %>;--navy:<%= navy %>}</style>
 <script type="application/ld+json"><%- JSON.stringify({
   '@context': 'https://schema.org', '@type': 'Organization',
@@ -45,13 +43,21 @@
 <header class="site-header">
   <div class="wrap header-row">
     <a href="/" class="brand" aria-label="<%= s.site_name %>, về trang chủ">
-      <% if (s.logo) { %><img src="<%= s.logo %>" alt="<%= s.site_name %>" class="brand-logo"><% } else { %><span class="brand-mark"><%= s.logo_initials %></span><% } %>
+      <% if (s.logo) { %><img src="<%= s.logo %>" alt="<%= s.site_name %>" class="brand-logo"<%- wh(s.logo) %>><% } else { %><span class="brand-mark"><%= s.logo_initials %></span><% } %>
       <span class="brand-text"><span class="brand-name"><%= s.site_name %></span><% if (s.site_tagline) { %><span class="brand-tag"><%= s.site_tagline %></span><% } %></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav"><span class="sr">Mở menu</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="nav-wrap" id="main-nav">
       <nav class="nav" aria-label="Điều hướng chính">
-        <% menu.header.forEach(m => { %><a href="<%= m.url %>"<%- m.new_tab ? ' target="_blank" rel="noopener"' : '' %><%- isActive(m.url) ? ' aria-current="page"' : '' %>><%= m.label %></a><% }) %>
+        <% const navLink = (m, cls) => `<a href="${m.url.replace(/"/g, '&quot;')}"${cls ? ` class="${cls}"` : ''}${m.new_tab ? ' target="_blank" rel="noopener"' : ''}${isActive(m.url) || path === m.url ? ' aria-current="page"' : ''}>${m.label.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</a>`; %>
+        <% menu.header.forEach((m, i) => { %>
+          <% if (m.children && m.children.length) { %>
+          <div class="nav-item has-sub">
+            <%- navLink(m) %><button type="button" class="sub-toggle" aria-expanded="false" aria-controls="sub-<%= i %>"><span class="sr">Mở danh sách <%= m.label %></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="sub" id="sub-<%= i %>"><% m.children.forEach(c => { %><%- navLink(c) %><% }) %></div>
+          </div>
+          <% } else { %><%- navLink(m) %><% } %>
+        <% }) %>
       </nav>
       <div class="header-actions">
         <% if (s.header_lang_label) { %><a href="<%= s.header_lang_url || '#' %>" class="lang"><%= s.header_lang_label %></a><% } %>

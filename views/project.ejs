@@ -9,8 +9,13 @@
   </div>
 </div></section>
 <section class="section"><div class="wrap article-wrap">
-  <% if (item.image) { %><img class="article-cover" src="<%= item.image %>" alt="<%= item.title %>"><% } else { %><div class="article-cover gen"><%- cover(item.category, item.title, 'wide') %></div><% } %>
+  <% if (item.image) { %><img class="article-cover" src="<%= item.image %>" alt="<%= item.title %>"<%- wh(item.image) %>><% } else { %><div class="article-cover gen"><%- cover(item.category, item.title, 'wide') %></div><% } %>
   <div class="prose"><%- item.content || '<p class="muted">Câu chuyện chi tiết của dự án đang được cập nhật.</p>' %></div>
 </div></section>
+<script type="application/ld+json"><%- JSON.stringify({ '@context': 'https://schema.org', '@type': 'CreativeWork', name: item.title, abstract: item.result || undefined,
+  image: item.image ? base + item.image : undefined, url: canonical, genre: item.category || undefined,
+  creator: { '@type': 'Organization', name: s.company_name, url: base + '/' },
+  sourceOrganization: item.client ? { '@type': 'Organization', name: item.client } : undefined,
+  dateModified: item.updated_at ? new Date(item.updated_at).toISOString() : undefined }).replace(/</g, '\\u003c') %></script>
 <%- include('partials/cta') %>
 <%- include('partials/foot') %>

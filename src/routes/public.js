@@ -4,22 +4,34 @@ const crypto = require('crypto');
 const { q, one } = require('../db');
 const { getSettings } = require('../settings');
 const { icon, cover } = require('../icons');
-const { csrf, fmtDate } = require('../util');
+const { csrf, fmtDate, wh } = require('../util');
 
 const router = express.Router();
 const BASE = () => (process.env.BASE_URL || '').replace(/\/$/, '');
+// Phiên bản tệp tĩnh (CSS, JS): đổi mỗi lần khởi động để trình duyệt tải bản mới thay vì dùng bản đã lưu 7 ngày
+const ASSET_V = Date.now().toString(36);
+
+// Trang theo đối tượng khách hàng: đường dẫn -> mã lưu trong cột audience và khóa cấu hình
+const AUDIENCES = {
+  'co-quan-nha-nuoc': { code: 'nha-nuoc', key: 'gov', need: 'Giải pháp phần mềm', icon: 'gov' },
+  'doanh-nghiep': { code: 'doanh-nghiep', key: 'biz', need: 'Giải pháp phần mềm', icon: 'briefcase' },
+};
 
 // Nạp cấu hình, menu cho mọi trang
 router.use(async (req, res, next) => {
   try {
     const s = await getSettings();
-    const menus = await q('SELECT location, label, url, new_tab FROM menu_items WHERE active ORDER BY sort, id');
+    const menus = await q('SELECT location, label, url, new_tab, parent_url FROM menu_items WHERE active ORDER BY sort, id');
     const offices = await q("SELECT title, body FROM blocks WHERE grp='offices' AND active ORDER BY sort, id");
     const by = loc => menus.filter(m => m.location === loc);
+    // Menu đầu trang: mục có parent_url hiện trong danh sách thả xuống của mục cha có liên kết tương ứng
+    const headerAll = by('header');
+    const header = headerAll.filter(m => !m.parent_url || !headerAll.some(p => !p.parent_url && p.url === m.parent_url))
+      .map(m => ({ ...m, children: m.parent_url ? [] : headerAll.filter(c => c.parent_url && c.parent_url === m.url) }));
     const base = BASE() || `${req.protocol}://${req.get('host')}`;
     Object.assign(res.locals, {
-      s, icon, cover, fmtDate, base, offices,
-      menu: { header: by('header'), footer1: by('footer_1'), footer2: by('footer_2'), legal: by('footer_legal') },
+      s, icon, cover, fmtDate, wh, base, offices, assetV: ASSET_V,
+      menu: { header, footer1: by('footer_1'), footer2: by('footer_2'), legal: by('footer_legal') },
       path: req.path,
       canonical: base + (req.path === '/' ? '/' : req.path.replace(/\/$/, '')),
       seo: { title: s.seo_title, desc: s.seo_desc, image: s.og_image, type: 'website' },
@@ -80,6 +92,31 @@ router.get('/giai-phap/:slug', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// Trang theo đối tượng: giải pháp, dự án, dịch vụ dành cho cơ quan nhà nước hoặc doanh nghiệp
+router.get('/danh-cho/:aud', async (req, res, next) => {
+  try {
+    const a = AUDIENCES[req.params.aud];
+    if (!a) return next();
+    const s = res.locals.s;
+    const [solutions, projects, blocks] = await Promise.all([
+      q("SELECT * FROM solutions WHERE active AND audience IN ('', $1) ORDER BY (audience=$1) DESC, sort, id", [a.code]),
+      q("SELECT * FROM projects WHERE active AND audience IN ('', $1) ORDER BY featured DESC, sort, id LIMIT 6", [a.code]),
+      q("SELECT * FROM blocks WHERE active AND grp IN ('consulting','licenses') ORDER BY sort, id"),
+    ]);
+    const label = s[`aud_${a.key}_label`], title = s[`aud_${a.key}_title`], text = s[`aud_${a.key}_text`];
+    seo(res, { title, desc: text });
+    const other = Object.entries(AUDIENCES).find(([k]) => k !== req.params.aud);
+    res.render('audience', {
+      a, slug: req.params.aud, label, title, text,
+      points: String(s[`aud_${a.key}_points`] || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean),
+      solutions, projects,
+      consulting: blocks.filter(b => b.grp === 'consulting'),
+      licenses: blocks.filter(b => b.grp === 'licenses'),
+      other: { slug: other[0], label: s[`aud_${other[1].key}_label`] },
+    });
+  } catch (e) { next(e); }
+});
+
 router.get('/du-an', async (req, res, next) => {
   try {
     const all = await q('SELECT * FROM projects WHERE active ORDER BY sort, id');
@@ -131,11 +168,11 @@ const contactLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardH
 function validate(f) {
   const e = {};
   if (!f.name) e.name = 'Vui lòng nhập họ và tên.';
-  if (!f.org) e.org = 'Vui lòng nhập tên cơ quan, đơn vị.';
+  if (!f.org) e.org = 'Vui lòng nhập tên cơ quan hoặc doanh nghiệp.';
   const digits = f.phone.replace(/[^0-9]/g, '');
   if (!digits) e.phone = 'Vui lòng nhập số điện thoại.';
   else if (digits.length < 10 || digits.length > 11) e.phone = 'Số điện thoại cần có 10 hoặc 11 chữ số.';
-  if (f.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email)) e.email = 'Email chưa đúng định dạng, ví dụ ten@coquan.gov.vn.';
+  if (f.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email)) e.email = 'Email chưa đúng định dạng, ví dụ ten@congty.vn.';
   if (!f.agree) e.agree = 'Bạn cần đồng ý để chúng tôi liên hệ lại.';
   return e;
 }
@@ -143,7 +180,10 @@ function validate(f) {
 router.get('/lien-he', csrf, (req, res) => {
   const s = res.locals.s;
   seo(res, { title: s.contact_title || 'Liên hệ', desc: s.contact_intro });
-  res.render('contact', { form: { need: req.query['linh-vuc'] || '' }, err: {}, sent: null });
+  // ?giai-phap=<tên> từ nút "Đăng ký demo" của trang giải pháp: điền sẵn nội dung để đội tư vấn biết khách quan tâm gì
+  const sp = String(req.query['giai-phap'] || '').trim().slice(0, 200);
+  const msg = sp ? `Đăng ký demo giải pháp: ${sp}` : '';
+  res.render('contact', { form: { need: String(req.query['linh-vuc'] || '').slice(0, 200), msg }, err: {}, sent: null });
 });
 
 router.post('/lien-he', contactLimiter, csrf, async (req, res, next) => {
@@ -173,7 +213,9 @@ router.get('/llms.txt', async (req, res, next) => {
     const s = res.locals.s;
     if (s.llms_txt) return res.type('text/plain').send(s.llms_txt);
     const sol = await q('SELECT slug, title, summary FROM solutions WHERE active ORDER BY sort');
-    const lines = [`# ${s.company_name}`, '', `> ${s.seo_desc}`, '', '## Giải pháp',
+    const lines = [`# ${s.company_name}`, '', `> ${s.seo_desc}`, '', '## Theo đối tượng khách hàng',
+      `- [${s.aud_gov_title}](${res.locals.base}/danh-cho/co-quan-nha-nuoc): ${s.aud_gov_text}`,
+      `- [${s.aud_biz_title}](${res.locals.base}/danh-cho/doanh-nghiep): ${s.aud_biz_text}`, '', '## Giải pháp',
       ...sol.map(x => `- [${x.title}](${res.locals.base}/giai-phap/${x.slug}): ${x.summary}`), '',
       '## Liên hệ', `- Hotline: ${s.hotline}`, `- Email: ${s.email}`, `- Đặt lịch tư vấn: ${res.locals.base}/lien-he`];
     res.type('text/plain').send(lines.join('\n'));
@@ -183,7 +225,8 @@ router.get('/llms.txt', async (req, res, next) => {
 router.get('/sitemap.xml', async (req, res, next) => {
   try {
     const b = res.locals.base;
-    const urls = [{ loc: '/' }, { loc: '/giai-phap' }, { loc: '/du-an' }, { loc: '/tin-tuc' }, { loc: '/lien-he' }];
+    const urls = [{ loc: '/' }, { loc: '/giai-phap' }, ...Object.keys(AUDIENCES).map(k => ({ loc: '/danh-cho/' + k })),
+      { loc: '/du-an' }, { loc: '/tin-tuc' }, { loc: '/lien-he' }];
     (await q('SELECT slug, updated_at FROM solutions WHERE active')).forEach(r => urls.push({ loc: '/giai-phap/' + r.slug, mod: r.updated_at }));
     (await q('SELECT slug, updated_at FROM projects WHERE active')).forEach(r => urls.push({ loc: '/du-an/' + r.slug, mod: r.updated_at }));
     (await q("SELECT slug, updated_at FROM posts WHERE status='published' AND published_at<=now()")).forEach(r => urls.push({ loc: '/tin-tuc/' + r.slug, mod: r.updated_at }));

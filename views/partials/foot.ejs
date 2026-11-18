@@ -4,7 +4,7 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <div class="brand">
-          <% if (s.logo_dark || s.logo) { %><img src="<%= s.logo_dark || s.logo %>" alt="<%= s.site_name %>" class="brand-logo"><% } else { %><span class="brand-mark"><%= s.logo_initials %></span><% } %>
+          <% if (s.logo_dark || s.logo) { %><img src="<%= s.logo_dark || s.logo %>" alt="<%= s.site_name %>" class="brand-logo"<%- wh(s.logo_dark || s.logo) %> loading="lazy"><% } else { %><span class="brand-mark"><%= s.logo_initials %></span><% } %>
           <span class="brand-name"><%= s.company_name_upper || s.company_name %></span>
         </div>
         <% if (s.footer_about) { %><p><%= s.footer_about %></p><% } %>
@@ -46,6 +46,6 @@
   <% if (s.social_zalo) { %><a href="<%= s.social_zalo %>" class="fc-zalo" target="_blank" rel="noopener">Zalo</a><% } %>
 </div>
 <% } %>
-<script src="/static/js/site.js" defer></script>
+<script src="/static/js/site.js?v=<%= assetV %>" defer></script>
 </body>
 </html>

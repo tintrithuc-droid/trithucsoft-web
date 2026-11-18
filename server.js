@@ -25,8 +25,9 @@ app.use(helmet({
     useDefaults: true,
     directives: {
       'script-src': ["'self'", "'unsafe-inline'", 'https://plausible.io', 'https://www.googletagmanager.com', 'https://www.google-analytics.com'],
-      'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-      'font-src': ["'self'", 'https://fonts.gstatic.com', 'data:'],
+      // Font Be Vietnam Pro tự lưu tại /static/fonts, không tải từ Google
+      'style-src': ["'self'", "'unsafe-inline'"],
+      'font-src': ["'self'", 'data:'],
       'img-src': ["'self'", 'data:', 'blob:', 'https:'],
       'frame-src': ['https://www.google.com', 'https://www.youtube.com', 'https://www.youtube-nocookie.com'],
       'connect-src': ["'self'", 'https://plausible.io', 'https://www.google-analytics.com'],
@@ -35,6 +36,19 @@ app.use(helmet({
   },
   crossOriginEmbedderPolicy: false,
 }));
+// IIS/ARR có thể gửi IP khách kèm số cổng (1.2.3.4:5678, [::1]:5678) trong X-Forwarded-For.
+// Bỏ số cổng để giới hạn tần suất (đăng nhập, form liên hệ) tính đúng theo từng IP.
+app.use((req, res, next) => {
+  const raw = req.ip || '';
+  const m = raw.match(/^\[([0-9a-fA-F:.]+)\]:\d+$/) || raw.match(/^(\d{1,3}(?:\.\d{1,3}){3}):\d+$/);
+  if (m) Object.defineProperty(req, 'ip', { value: m[1], configurable: true });
+  next();
+});
+// Tắt các quyền trình duyệt website không dùng (camera, micro, vị trí, thanh toán...)
+app.use((req, res, next) => {
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()');
+  next();
+});
 app.use(compression());
 if (process.env.NODE_ENV !== 'test') app.use(morgan(isProd ? 'combined' : 'dev'));
 

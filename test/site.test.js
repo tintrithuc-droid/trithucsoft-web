@@ -54,6 +54,28 @@ test('website và trang quản trị', async t => {
   assert.ok(home2.includes('Khẩu hiệu kiểm thử'));
   assert.ok(home2.includes('--accent:#0F766E'));
 
+  // Phân luồng theo đối tượng khách hàng
+  const { q } = require('../src/db');
+  await q("UPDATE solutions SET audience='nha-nuoc' WHERE slug='quan-ly-dieu-hanh-cap-xa-phuong'");
+  const sol = await q('SELECT title FROM solutions WHERE slug=$1', ['quan-ly-dieu-hanh-cap-xa-phuong']);
+  const gov = await (await fetch(base + '/danh-cho/co-quan-nha-nuoc')).text();
+  const biz = await (await fetch(base + '/danh-cho/doanh-nghiep')).text();
+  assert.ok(gov.includes(sol[0].title), 'giải pháp nhà nước hiện ở trang cơ quan nhà nước');
+  assert.ok(!biz.includes(sol[0].title), 'giải pháp nhà nước không hiện ở trang doanh nghiệp');
+  assert.equal((await fetch(base + '/danh-cho/khong-co')).status, 404);
+  assert.ok(home2.includes('/danh-cho/doanh-nghiep'), 'trang chủ có khối theo đối tượng');
+  assert.ok((await (await fetch(base + '/sitemap.xml')).text()).includes('/danh-cho/co-quan-nha-nuoc'));
+  // Nút Đăng ký demo điền sẵn tên giải pháp vào form
+  const lh = await (await fetch(base + '/lien-he?giai-phap=' + encodeURIComponent('GIS & bản đồ'))).text();
+  assert.ok(lh.includes('Đăng ký demo giải pháp: GIS &amp; bản đồ'));
+  // Menu thả xuống
+  await q("INSERT INTO menu_items(location, label, url, parent_url, sort, active) VALUES ('header','Cho doanh nghiệp','/danh-cho/doanh-nghiep','/giai-phap',1,true)");
+  const home3 = await (await fetch(base + '/')).text();
+  assert.ok(/class="sub"[^>]*>.*Cho doanh nghiệp/s.test(home3), 'mục con nằm trong danh sách thả xuống');
+  const r2 = await fetch(base + '/');
+  assert.ok((r2.headers.get('permissions-policy') || '').includes('camera=()'));
+  assert.ok(!(r2.headers.get('content-security-policy') || '').includes('fonts.googleapis'));
+
   // Không có mã CSRF thì bị chặn
   r = await fetch(base + '/quan-tri/cau-hinh', { method: 'POST', redirect: 'manual', headers: { cookie, 'content-type': 'application/x-www-form-urlencoded' }, body: '_tab=brand&site_tagline=hack' });
   assert.equal(r.status, 403);

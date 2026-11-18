@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="hero-visual">
-        <% if (b.image) { %><img src="<%= b.image %>" alt="" <%- i ? 'loading="lazy"' : 'fetchpriority="high"' %>><% } else { %>
+        <% if (b.image) { %><img src="<%= b.image %>" alt=""<%- wh(b.image) %> <%- i ? 'loading="lazy"' : 'fetchpriority="high"' %>><% } else { %>
         <div class="panel" aria-hidden="true">
           <div class="panel-top"><b>Bảng điều hành số</b><span class="live">Đang hoạt động</span></div>
           <div class="kpis">
@@ -56,9 +56,32 @@
     <p class="clients-title"><%= s.home_clients_title %></p>
     <div class="logo-grid">
       <% clients.forEach(c => { %>
-      <% const inner = c.logo ? `<img src="${c.logo}" alt="${c.name.replace(/"/g, '&quot;')}" loading="lazy">` : null; %>
+      <% const inner = c.logo ? `<img src="${c.logo}" alt="${c.name.replace(/"/g, '&quot;')}"${wh(c.logo)} loading="lazy">` : null; %>
       <% if (c.url) { %><a class="logo-cell" href="<%= c.url %>" target="_blank" rel="noopener"><% if (inner) { %><%- inner %><% } else { %><%= c.name %><% } %></a>
       <% } else { %><div class="logo-cell"><% if (inner) { %><%- inner %><% } else { %><%= c.name %><% } %></div><% } %>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% const audCards = [
+     { slug: 'co-quan-nha-nuoc', ico: 'gov', label: s.aud_gov_label, title: s.aud_gov_title, text: s.aud_gov_text, points: s.aud_gov_points },
+     { slug: 'doanh-nghiep', ico: 'briefcase', label: s.aud_biz_label, title: s.aud_biz_title, text: s.aud_biz_text, points: s.aud_biz_points },
+   ].filter(x => x.label); %>
+<% if (audCards.length) { %>
+<section id="doi-tuong" class="section" style="padding-bottom:0">
+  <div class="wrap stack" style="gap:32px">
+    <div class="sec-head"><div><span class="kicker"><%= s.home_aud_kicker %></span><h2 class="h2"><%= s.home_aud_title %></h2></div></div>
+    <div class="grid g-340 aud-cards">
+      <% audCards.forEach(x => { %>
+      <a href="/danh-cho/<%= x.slug %>" class="card aud-card reveal">
+        <span class="aud-card-top"><span class="ico"><%- icon(x.ico) %></span><span class="kicker"><%= x.label %></span></span>
+        <h3><%= x.title %></h3>
+        <% if (x.text) { %><p><%= x.text %></p><% } %>
+        <ul class="ticks"><% lines(x.points).map(l => l.trim()).filter(Boolean).forEach(l => { %><li><%= l %></li><% }) %></ul>
+        <span class="go">Xem giải pháp cho <%= x.label.toLowerCase() %> →</span>
+      </a>
       <% }) %>
     </div>
   </div>
@@ -218,5 +241,7 @@
 </section>
 <% } %>
 
+<script type="application/ld+json"><%- JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', name: s.site_name, alternateName: s.company_name,
+  url: base + '/', inLanguage: 'vi-VN', publisher: { '@type': 'Organization', name: s.company_name } }).replace(/</g, '\\u003c') %></script>
 <%- include('partials/cta') %>
 <%- include('partials/foot') %>

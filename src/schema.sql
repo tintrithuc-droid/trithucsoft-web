@@ -183,3 +183,10 @@ CREATE TABLE IF NOT EXISTS "session" (
   "expire" timestamp(6) NOT NULL
 );
 CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
+
+-- Bổ sung 11/2026: phân luồng theo đối tượng khách hàng, menu con
+-- audience: '' = cả hai, 'nha-nuoc' = cơ quan nhà nước, 'doanh-nghiep' = doanh nghiệp
+ALTER TABLE solutions ADD COLUMN IF NOT EXISTS audience TEXT NOT NULL DEFAULT '';
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS audience TEXT NOT NULL DEFAULT '';
+-- parent_url: mục menu đầu trang có liên kết này sẽ hiện mục hiện tại trong danh sách thả xuống
+ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS parent_url TEXT NOT NULL DEFAULT '';

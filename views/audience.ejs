@@ -1,0 +1,79 @@
+<%- include('partials/head') %>
+<%
+  const lienHe = '/lien-he?linh-vuc=' + encodeURIComponent(a.need);
+  const isBiz = a.code === 'doanh-nghiep';
+%>
+<section class="page-hero"><div class="wrap">
+  <%- include('partials/crumbs', { items: [['Giải pháp', '/giai-phap'], [label]] }) %>
+  <div class="aud-hero">
+    <div class="aud-hero-copy">
+      <span class="kicker"><%= label %></span>
+      <h1><%= title %></h1>
+      <% if (text) { %><p class="lead"><%= text %></p><% } %>
+      <div class="btn-row">
+        <a href="<%= lienHe %>" class="btn btn-primary">Đăng ký tư vấn</a>
+        <a href="#giai-phap" class="btn btn-outline">Xem giải pháp phù hợp</a>
+      </div>
+    </div>
+    <% if (points.length) { %>
+    <ul class="checks aud-points">
+      <% points.forEach(p => { %><li><%- icon('check', 20, 'currentColor', 2.2) %><%= p %></li><% }) %>
+    </ul>
+    <% } %>
+  </div>
+</div></section>
+
+<% if (solutions.length) { %>
+<section id="giai-phap" class="section"><div class="wrap stack">
+  <div class="sec-head">
+    <div><span class="kicker">Giải pháp</span><h2 class="h2">Giải pháp dành cho <%= label.toLowerCase() %></h2></div>
+    <a href="/giai-phap" class="more">Tất cả giải pháp →</a>
+  </div>
+  <div class="grid g-340">
+    <% solutions.forEach(x => { %>
+    <a href="/giai-phap/<%= x.slug %>" class="card reveal">
+      <span class="ico"><%- icon(x.icon || 'code') %></span>
+      <% if (x.tag) { %><span class="sol-no"><%= x.tag %></span><% } %>
+      <h3><%= x.title %></h3>
+      <p><%= x.summary %></p>
+      <span class="go">Xem chi tiết →</span>
+    </a>
+    <% }) %>
+  </div>
+</div></section>
+<% } %>
+
+<% const svc = isBiz ? licenses : consulting; %>
+<% if (svc.length) { %>
+<section class="band-white"><div class="wrap section stack" style="gap:32px">
+  <div class="sec-head">
+    <div>
+      <span class="kicker"><%= isBiz ? s.home_license_kicker : s.home_consult_kicker %></span>
+      <h2 class="h2" style="font-size:34px"><%= isBiz ? s.home_license_title : s.home_consult_title %></h2>
+    </div>
+    <a href="<%= isBiz ? '/phan-mem-ban-quyen' : '/tu-van-cntt' %>" class="more">Tìm hiểu thêm →</a>
+  </div>
+  <div class="grid g-270">
+    <% svc.forEach((x, i) => { %><div class="mod reveal"><% if (!isBiz) { %><span class="num"><%= i + 1 %></span><% } %><h3><%= x.title %></h3><% if (x.body) { %><p><%= x.body %></p><% } %><% if (isBiz && x.value) { %><span class="muted" style="font-size:13px"><%= x.value %></span><% } %></div><% }) %>
+  </div>
+</div></section>
+<% } %>
+
+<% if (projects.length) { %>
+<section class="section"><div class="wrap stack">
+  <div class="sec-head">
+    <div><span class="kicker">Dự án tiêu biểu</span><h2 class="h2">Một số công việc chúng tôi đã làm</h2></div>
+    <a href="/du-an" class="more">Xem tất cả dự án →</a>
+  </div>
+  <div class="grid g-340">
+    <% projects.forEach(p => { %><%- include('partials/project-card', { p }) %><% }) %>
+  </div>
+</div></section>
+<% } %>
+
+<section class="section" style="padding-top:<%= projects.length ? 0 : 80 %>px"><div class="wrap">
+  <a class="aud-switch" href="/danh-cho/<%= other.slug %>">Bạn là <b><%= other.label.toLowerCase() %></b>? Xem giải pháp dành cho <%= other.label.toLowerCase() %> →</a>
+</div></section>
+
+<%- include('partials/cta', { ctaLabel: 'Đăng ký tư vấn', ctaUrl: lienHe }) %>
+<%- include('partials/foot') %>

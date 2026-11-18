@@ -1,5 +1,7 @@
 <%- include('partials/head') %>
-<% const it = item; %>
+<% const it = item;
+   const demoForm = '/lien-he?linh-vuc=' + encodeURIComponent('Giải pháp phần mềm') + '&giai-phap=' + encodeURIComponent(it.title);
+   const doiTuong = { 'nha-nuoc': 'Cơ quan nhà nước', 'doanh-nghiep': 'Doanh nghiệp' }[it.audience] || 'Cơ quan nhà nước và doanh nghiệp'; %>
 <section class="page-hero"><div class="wrap">
   <%- include('partials/crumbs', { items: [['Giải pháp', '/giai-phap'], [it.title]] }) %>
   <div class="sol-hero">
@@ -8,12 +10,12 @@
       <h1><%= it.hero_title || it.title %></h1>
       <% if (it.hero_text) { %><p class="lead" style="max-width:580px"><%= it.hero_text %></p><% } %>
       <div class="btn-row">
-        <a href="<%= it.demo_url || '/lien-he?linh-vuc=' + encodeURIComponent('Giải pháp phần mềm') %>" class="btn btn-primary"<%- it.demo_url ? ' target="_blank" rel="noopener"' : '' %>>Xem Live Demo</a>
-        <a href="/lien-he?linh-vuc=<%= encodeURIComponent('Giải pháp phần mềm') %>" class="btn btn-outline">Đăng ký tư vấn</a>
+        <a href="<%= demoForm %>" class="btn btn-primary">Đăng ký demo</a>
+        <% if (it.demo_url) { %><a href="<%= it.demo_url %>" class="btn btn-outline" target="_blank" rel="noopener">Xem Live Demo</a><% } %>
         <% if (it.brochure) { %><a href="<%= it.brochure %>" class="btn btn-outline" download><%- icon('doc', 18, 'currentColor', 2) %>Tải tài liệu giới thiệu (PDF)</a><% } %>
       </div>
     </div>
-    <div class="sol-visual"><% if (it.image) { %><img src="<%= it.image %>" alt="Giao diện <%= it.title %>" fetchpriority="high"><% } else { %><span class="gen-cover wide" role="img" aria-label="<%= it.title %>"><span class="gc-grid"></span><span class="gc-ring"></span><span class="gc-ico"><%- icon(it.icon, 44, 'currentColor', 1.6) %></span><% if (it.tag) { %><span class="gc-cat"><%= it.tag %></span><% } %></span><% } %></div>
+    <div class="sol-visual"><% if (it.image) { %><img src="<%= it.image %>" alt="Giao diện <%= it.title %>"<%- wh(it.image) %> fetchpriority="high"><% } else { %><span class="gen-cover wide" role="img" aria-label="<%= it.title %>"><span class="gc-grid"></span><span class="gc-ring"></span><span class="gc-ico"><%- icon(it.icon, 44, 'currentColor', 1.6) %></span><% if (it.tag) { %><span class="gc-cat"><%= it.tag %></span><% } %></span><% } %></div>
   </div>
 </div></section>
 
@@ -66,5 +68,10 @@
   <div class="grid g-320"><% others.forEach(x => { %><a href="/giai-phap/<%= x.slug %>" class="card"><span class="ico"><%- icon(x.icon) %></span><h3><%= x.title %></h3><p><%= x.summary %></p></a><% }) %></div>
 </div></section>
 <% } %>
-<%- include('partials/cta', { ctaTitle: 'Xem Live Demo cùng chuyên gia Tri Thức', ctaText: 'Chuyên gia Tri Thức trình diễn trên dữ liệu mẫu và trả lời câu hỏi của đơn vị bạn.', ctaLabel: 'Đăng ký tư vấn', ctaUrl: '/lien-he?linh-vuc=' + encodeURIComponent('Giải pháp phần mềm') }) %>
+<script type="application/ld+json"><%- JSON.stringify({ '@context': 'https://schema.org', '@type': 'Service', name: it.title,
+  description: it.summary || it.hero_text || undefined, serviceType: it.tag || 'Giải pháp phần mềm', url: canonical,
+  image: it.image ? base + it.image : undefined, areaServed: { '@type': 'Country', name: 'Việt Nam' },
+  audience: { '@type': 'BusinessAudience', name: doiTuong },
+  provider: { '@type': 'Organization', name: s.company_name, url: base + '/' } }).replace(/</g, '\\u003c') %></script>
+<%- include('partials/cta', { ctaTitle: 'Xem demo cùng chuyên gia Tri Thức', ctaText: 'Chuyên gia Tri Thức trình diễn trên dữ liệu mẫu và trả lời câu hỏi của đơn vị bạn.', ctaLabel: 'Đăng ký demo', ctaUrl: demoForm }) %>
 <%- include('partials/foot') %>

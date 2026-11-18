@@ -97,6 +97,20 @@ const GROUPS = [
     ],
   },
   {
+    id: 'audience', label: 'Theo đối tượng khách hàng', fields: [
+      { key: 'home_aud_kicker', label: 'Trang chủ: nhãn nhỏ khối "Giải pháp theo đối tượng"', type: 'text', def: 'Giải pháp theo đối tượng' },
+      { key: 'home_aud_title', label: 'Trang chủ: tiêu đề khối', type: 'text', def: 'Đơn vị của bạn là cơ quan nhà nước hay doanh nghiệp?' },
+      { key: 'aud_gov_label', label: 'Cơ quan nhà nước: tên ngắn (thẻ, menu)', type: 'text', def: 'Cơ quan nhà nước' },
+      { key: 'aud_gov_title', label: 'Cơ quan nhà nước: tiêu đề trang', type: 'text', def: 'Chuyển đổi số cho cơ quan nhà nước' },
+      { key: 'aud_gov_text', label: 'Cơ quan nhà nước: mô tả', type: 'textarea', def: 'Phần mềm quản lý chuyên ngành, bản đồ số GIS, kho dữ liệu và tư vấn dự án ứng dụng CNTT đúng quy định, từ lúc lập dự án đến khi nghiệm thu và vận hành.' },
+      { key: 'aud_gov_points', label: 'Cơ quan nhà nước: điểm nổi bật (mỗi dòng một ý)', type: 'textarea', def: 'Phần mềm quản lý, điều hành cấp tỉnh, xã, phường\nBản đồ số GIS, cơ sở dữ liệu chuyên ngành\nTư vấn lập, thẩm định, giám sát dự án CNTT\nTuân thủ quy định về an toàn thông tin, dữ liệu' },
+      { key: 'aud_biz_label', label: 'Doanh nghiệp: tên ngắn (thẻ, menu)', type: 'text', def: 'Doanh nghiệp' },
+      { key: 'aud_biz_title', label: 'Doanh nghiệp: tiêu đề trang', type: 'text', def: 'Giải pháp số cho doanh nghiệp' },
+      { key: 'aud_biz_text', label: 'Doanh nghiệp: mô tả', type: 'textarea', def: 'Quản lý công việc và điều hành nội bộ, cổng thông tin, lưu trữ số, phần mềm bản quyền chính hãng và tư vấn chuyển đổi số phù hợp quy mô doanh nghiệp.' },
+      { key: 'aud_biz_points', label: 'Doanh nghiệp: điểm nổi bật (mỗi dòng một ý)', type: 'textarea', def: 'Quản lý công việc, dự án, KPI trên một nền tảng\nPhần mềm bản quyền chính hãng, có hóa đơn đầy đủ\nTư vấn lộ trình chuyển đổi số theo nhu cầu thực tế\nHỗ trợ triển khai, đào tạo và vận hành lâu dài' },
+    ],
+  },
+  {
     id: 'seo', label: 'SEO và đo lường', fields: [
       { key: 'seo_title', label: 'Tiêu đề trang chủ trên Google', type: 'text', def: 'Tri Thức | Phần mềm và tư vấn công nghệ thông tin' },
       { key: 'seo_desc', label: 'Mô tả mặc định', type: 'textarea', def: 'Công ty Cổ phần Tin học Tri Thức: phần mềm quản lý, GIS, kho dữ liệu; tư vấn dự án CNTT; phần mềm bản quyền cho cơ quan nhà nước và doanh nghiệp.' },

@@ -20,6 +20,14 @@ const BLOCK_GROUPS = [
   { value: 'offices', label: 'Văn phòng, chi nhánh (chân trang, liên hệ)' },
 ];
 
+// Đối tượng khách hàng: dùng cho trang /danh-cho/... và khối "Giải pháp theo đối tượng" trên trang chủ
+const AUDIENCE_OPTIONS = [
+  { value: '', label: 'Cả cơ quan nhà nước và doanh nghiệp' },
+  { value: 'nha-nuoc', label: 'Cơ quan nhà nước' },
+  { value: 'doanh-nghiep', label: 'Doanh nghiệp' },
+];
+const audienceField = { name: 'audience', label: 'Đối tượng khách hàng', type: 'select', options: AUDIENCE_OPTIONS };
+
 const seo = [
   { name: 'seo_title', label: 'Tiêu đề SEO (để trống sẽ dùng tiêu đề)', type: 'text', group: 'SEO' },
   { name: 'seo_desc', label: 'Mô tả SEO', type: 'textarea', group: 'SEO' },
@@ -52,6 +60,7 @@ const RESOURCES = {
       { name: 'location', label: 'Vị trí', type: 'select', options: MENU_LOCATIONS, required: true },
       { name: 'label', label: 'Nhãn', type: 'text', required: true },
       { name: 'url', label: 'Liên kết (ví dụ /giai-phap hoặc https://...)', type: 'text', required: true },
+      { name: 'parent_url', label: 'Thuộc menu (chỉ menu đầu trang): nhập liên kết của mục cha, ví dụ /giai-phap, để hiện trong danh sách thả xuống', type: 'text' },
       { name: 'new_tab', label: 'Mở trong thẻ mới', type: 'checkbox' },
       { name: 'sort', label: 'Thứ tự', type: 'number' },
       { name: 'active', label: 'Đang hiển thị', type: 'checkbox' },
@@ -80,6 +89,7 @@ const RESOURCES = {
       { name: 'title', label: 'Tên giải pháp', type: 'text', required: true },
       { name: 'slug', label: 'Đường dẫn (tự tạo nếu để trống)', type: 'slug' },
       { name: 'tag', label: 'Nhóm, lĩnh vực (ví dụ Chính quyền số, GIS)', type: 'text' },
+      audienceField,
       { name: 'icon', label: 'Biểu tượng', type: 'select', options: ICON_OPTIONS },
       { name: 'summary', label: 'Mô tả ngắn trên thẻ', type: 'textarea' },
       { name: 'kicker', label: 'Nhãn nhỏ đầu trang', type: 'text', group: 'Đầu trang' },
@@ -113,6 +123,7 @@ const RESOURCES = {
       { name: 'slug', label: 'Đường dẫn (tự tạo nếu để trống)', type: 'slug' },
       { name: 'client', label: 'Đơn vị khách hàng', type: 'text' },
       { name: 'category', label: 'Lĩnh vực (dùng làm bộ lọc)', type: 'text', datalist: 'project_categories' },
+      audienceField,
       { name: 'result', label: 'Kết quả nổi bật (có con số)', type: 'textarea' },
       { name: 'image', label: 'Ảnh triển khai thực tế', type: 'image' },
       { name: 'content', label: 'Câu chuyện dự án', type: 'richtext' },
@@ -188,4 +199,4 @@ const RESOURCES = {
   },
 };
 
-module.exports = { RESOURCES, MENU_LOCATIONS, BLOCK_GROUPS };
+module.exports = { RESOURCES, MENU_LOCATIONS, BLOCK_GROUPS, AUDIENCE_OPTIONS };
