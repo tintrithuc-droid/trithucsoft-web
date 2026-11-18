@@ -4,3 +4,9 @@ uploads/*
 .env
 *.log
 export/
+
+# Tạo ra khi cài trực tiếp trong thư mục mã nguồn (trien-khai\windows\cai-dat.ps1 -ThuMuc <thư mục này>)
+logs/
+dichvu/
+goi-cai-dat/
+_iis/*.bak-*

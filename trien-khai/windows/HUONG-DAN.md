@@ -137,6 +137,17 @@ Khi máy chủ đã chạy IIS cho các site khác, cổng 80/443 do IIS giữ n
 4. Chép `trien-khai\windows\iis\web.config` vào thư mục site.
 5. Chạy `.\cai-dat.ps1 -TenMien trithucsoft.vn -DungIIS`.
 
+Lưu ý: bộ cài ARR nạp thêm mô-đun dùng chung cho cả IIS, nên **mọi app pool trên máy chủ recycle một lần** (các site khác gián đoạn vài giây). Nên cài ngoài giờ làm việc.
+
+### Máy chủ trithucsoft.vn hiện tại (triển khai 18/11/2026)
+
+- Website cài ngay trong thư mục mã nguồn `D:\SourceCode\PublishWeb\trithucsoft-web` (`-ThuMuc` trỏ vào chính thư mục này), dịch vụ `TriThucWeb` nghe `127.0.0.1:3000`.
+- Site IIS `trithucsoft.vn` có app `/` trỏ vào thư mục [`_iis`](../../_iis) của repo. Thư mục này chỉ chứa:
+  - `web.config`: ép HTTPS, bỏ `www`, chuyển hướng 301 từ đường dẫn của website cũ (kể cả tin bài theo slug cũ, bảng `TinCu`), rồi chuyển mọi yêu cầu còn lại về Node. Bọc trong `inheritInChildApplications="false"` để các app con của website cũ (`/be`, `/FileUploader`...) vẫn chạy.
+  - `proxy-service-worker.js`: service worker "tự hủy", gỡ service worker của website React cũ khỏi trình duyệt khách. Giữ ít nhất vài tháng.
+- Sửa `_iis\web.config` có hiệu lực ngay, không cần khởi động lại gì.
+- Biến `HTTP_X_FORWARDED_PROTO`, `HTTP_X_FORWARDED_HOST` phải được cho phép ở cấp server cho site (đã làm bằng `appcmd set config "trithucsoft.vn" -section:system.webServer/rewrite/allowedServerVariables ... /commit:apphost`).
+
 ## Xử lý sự cố
 
 | Hiện tượng | Cách xử lý |

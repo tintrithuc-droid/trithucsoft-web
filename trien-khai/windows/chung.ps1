@@ -78,6 +78,11 @@ function LamMoiPath {
 function DichVuTonTai($ten) { return [bool](Get-Service -Name $ten -ErrorAction SilentlyContinue) }
 
 function ChayLenh($tep, [string[]]$thamSo, $thongBaoLoi) {
-  & $tep @thamSo
+  # PowerShell 5.1 coi mọi dòng chương trình ghi ra stderr (ví dụ "npm warn deprecated ...") là lỗi
+  # và dừng script khi ErrorActionPreference = Stop. Chỉ dựa vào mã thoát để biết lệnh có lỗi hay không.
+  $truoc = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try { & $tep @thamSo 2>&1 | ForEach-Object { Write-Host "    $_" } }
+  finally { $ErrorActionPreference = $truoc }
   if ($LASTEXITCODE -ne 0) { Dung "$thongBaoLoi (mã thoát $LASTEXITCODE)" }
 }
